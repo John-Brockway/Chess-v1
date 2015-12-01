@@ -1,5 +1,6 @@
 #include "player.h"
 #include "board.h"
+#include <string>
 
 Player::Player(int i, Board *b) {
   if (i != 0) {
@@ -8,11 +9,11 @@ Player::Player(int i, Board *b) {
   board = b;
 }
 
-void Player::movePiece(string start, string end) {
+void Player::movePiece(std::string start, std::string end) {
   board->move(start, end);
 }
 
-void Player::movePiece(string start, string end, string prom) {
+void Player::movePiece(std::string start, std::string end, std::string prom) {
   board->move(start, end, prom);
 }
 
