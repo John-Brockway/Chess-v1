@@ -7,6 +7,7 @@ class GraphicDisplay
 	Xwindow w;
 public:
 	GraphicDisplay();
+	void defaultPieces();
 	void notify(int x1, int y1, int x2, int y2, char piece);
 };
 

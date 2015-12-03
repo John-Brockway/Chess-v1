@@ -5,12 +5,22 @@
 
 GraphicDisplay::GraphicDisplay()
 {
-	char c = ' ';
 	for (int i = 0; i <= 7; i++)
 	{
 		for (int j = 0; j <= 7; j++)
 		{
 			w.fillRectangle(50 * i, 50 * j, 50, 50, (i + j) % 2);
+		}
+	}
+}
+
+void GraphicDisplay::defaultPieces()
+{
+	char c = ' ';
+	for (int i = 0; i <= 7; i++)
+	{
+		for (int j = 0; j <= 7; j++)
+		{
 			if (j == 0)
 			{
 				if (i == 0 || i == 7)
@@ -42,8 +52,7 @@ GraphicDisplay::GraphicDisplay()
 					c = 'K';
 			}
 			else
-					c = ' ';
-
+				c = ' ';
 			w.drawBigString((50 * i) + 15, (50 * j) + 35, std::string(1, c), Xwindow::Blue);
 		}
 	}

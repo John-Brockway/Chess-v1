@@ -43,6 +43,7 @@ void Board::defSetup() {
   for (int i = 0 ; i < 8 ; i++) {
     brd[6][i] = 'P';
   }
+  graphics->defaultPieces();
 }
 
 bool Board::setPiece(char type, string location) {
@@ -66,6 +67,7 @@ bool Board::setPiece(char type, string location) {
   else if (type == 'r' || type == 'n' || type == 'b' || type == 'q' || type == 'k' || type == 'p' ||
             type == 'R' || type == 'N' || type == 'B' || type == 'Q' || type == 'K' || type == 'P') {
     brd[row][col] = type;
+    graphics->notify(col, row, col, row, type);
     return true;
   }
   return false;
