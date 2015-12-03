@@ -14,7 +14,11 @@ int main() {
     while (1) {
       cout << endl << "To start a new game, enter ''game x y'' where x and y are either " << endl;
       cout << "''human'' or ''computer[1-4]''. To enter setup, type ''setup''" << endl;
-      cin >> input;
+      cout << "To stop playing for right now, type ''quit''" << endl;
+      getline(cin, input);
+      istringstream str(input);
+      input = "";
+      str >> input;
       if (input == "game") {
         b.defSetup();
         b.print();
@@ -66,15 +70,16 @@ int main() {
         }
         break;
       }
+      else if (input == "quit") break;
       else {
         cout << "Enter valid input" << endl;
       }
     }
     while (1) {                      // cycling through turns
 cout << player << "'s Move: ";
-      cin.ignore();
       input = "";
       getline(cin, input);
+cout << input << endl;
       if (input == "resign") {
         if (player == 'w') {
           cout << "Black wins!" << endl;
@@ -98,12 +103,18 @@ cout << "moving" << endl;
         ss >> start;
         ss >> end;
         bool rightTeam = b.rightTeam(player, start);
-        if (ss >> promotion) validTurn = b.move(start, end, promotion);
-        else validTurn = b.move(start, end);
-        if (validTurn && rightTeam) b.print();
+        if (rightTeam) {
+          if (ss >> promotion) validTurn = b.move(start, end, promotion);
+          else validTurn = b.move(start, end);
+          if (validTurn) b.print();
+          else {
+            cout << "That was not a valid move!" << endl;
+            continue;
+          }
+        }
         else {
-          cout << "That was not a valid move!" << endl;
-          continue;
+         cout << "Pick your own piece!" << endl;
+         continue;
         }
       }
       if (player == 'w') player = 'b';
