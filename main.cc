@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ int main(int argc, char* argv[]) {
   while (gameOn) {                     // cycling through games
     char player = 'b';
     Board b;
-    if (argc == 0) {
+    if (argc == 1) {
       while (1) {
         cout << endl << "To start a new game, enter ''game x y'' where x and y are either " << endl;
         cout << "''human'' or ''computer[1-4]''. To enter setup, type ''setup''" << endl;
@@ -84,18 +85,22 @@ int main(int argc, char* argv[]) {
     }
     else {
       string line;
-      ifstream save(argv[0]);
+      ifstream save(argv[1]);
       for (int i = 0 ; i < 8 ; i++) {
         getline(save, line);
         for (int j = 0 ; j < 8 ; j++) {
           if (line[j] != '_') {
-            b.setPiece(addType, line[j]);
+            string placement = "a1";
+            placement[0] = j+'a';
+            placement[1] = (8 - i) + '0';
+            b.setPiece(line[j], placement);
           }
         }
       }
       getline(save, line);
       player = line[0] - 'A' +'a';
       argc = 0;
+      b.print();
     }
     while (gameOn) {                      // cycling through turns
       cout << player << "'s Move: ";
