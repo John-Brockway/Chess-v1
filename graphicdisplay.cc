@@ -53,6 +53,6 @@ void GraphicDisplay::notify(int x1, int y1, int x2, int y2, char piece)
 {
 	w.fillRectangle(50 * x1, 50 * y1, 50, 50, (x1 + y1) % 2);
 	w.fillRectangle(50 * x2, 50 * y2, 50, 50, (x2 + y2) % 2);
-	w.drawBigString(50 * x2, 50 * y2, std::string(piece, 1), Xwindow::Blue);
+	w.drawBigString((50 * x2) + 15, (50 * y2) + 35, std::string(1, piece), Xwindow::Blue);
 }
 
