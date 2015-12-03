@@ -106,6 +106,15 @@ void Board::print() {
   cout << "  abcdefgh" << endl << endl;
 }
 
+bool Board::rightTeam(char player, string place) {
+  int row = 8 - place[1] + '0';
+  int col = place[0] - 'a';
+  if (player == 'w' && brd[row][col] < 'Z' && brd[row][col] > 'A') return true;
+  if (player == 'b' && brd[row][col] < 'z' && brd[row][col] > 'a') return true;
+cout << "false" << endl;
+  return false;
+}
+
 bool Board::move(string start, string end) {
   if (legalMove(start, end)) {
     brd[8 - end[1] + '0'][end[0] - 'a'] = brd[8 - start[1] + '0'][start[0] - 'a'];
