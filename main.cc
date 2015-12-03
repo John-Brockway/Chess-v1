@@ -18,7 +18,7 @@ int main() {
       if (input == "game") {
         b.defSetup();
         b.print();
-        player = 'b';
+        player = 'w';
         // human vs computer stuff
         break;
       }
@@ -71,6 +71,9 @@ int main() {
       }
     }
     while (1) {                      // cycling through turns
+cout << player << "'s Move: ";
+      cin.ignore();
+      input = "";
       getline(cin, input);
       if (input == "resign") {
         if (player == 'w') {
@@ -84,7 +87,9 @@ int main() {
       string input2;
       istringstream ss(input);
       ss >> input2;
+cout << input2 << endl;
       if (input2 == "move") {
+cout << "moving" << endl;
         // if current player is computer {} else:
         string start;
         string end;
@@ -92,9 +97,10 @@ int main() {
         bool validTurn = false;
         ss >> start;
         ss >> end;
+        bool rightTeam = b.rightTeam(player, start);
         if (ss >> promotion) validTurn = b.move(start, end, promotion);
         else validTurn = b.move(start, end);
-        if (validTurn && b.rightTeam(player, start)) b.print();
+        if (validTurn && rightTeam) b.print();
         else {
           cout << "That was not a valid move!" << endl;
           continue;

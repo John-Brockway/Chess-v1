@@ -111,7 +111,6 @@ bool Board::rightTeam(char player, string place) {
   int col = place[0] - 'a';
   if (player == 'w' && brd[row][col] < 'Z' && brd[row][col] > 'A') return true;
   if (player == 'b' && brd[row][col] < 'z' && brd[row][col] > 'a') return true;
-cout << "false" << endl;
   return false;
 }
 
