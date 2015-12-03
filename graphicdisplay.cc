@@ -44,7 +44,7 @@ GraphicDisplay::GraphicDisplay()
 			else
 					c = ' ';
 
-			w.drawBigString((50 * 1) + 15, (50 * j) + 35, std::string(1, c), Xwindow::Blue);
+			w.drawBigString((50 * i) + 15, (50 * j) + 35, std::string(1, c), Xwindow::Blue);
 		}
 	}
 }
