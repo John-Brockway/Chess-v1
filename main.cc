@@ -94,7 +94,7 @@ int main() {
         ss >> end;
         if (ss >> promotion) validTurn = b.move(start, end, promotion);
         else validTurn = b.move(start, end);
-        if (validTurn) b.print();
+        if (validTurn && b.rightTeam(player, start)) b.print();
         else {
           cout << "That was not a valid move!" << endl;
           continue;

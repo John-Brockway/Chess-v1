@@ -2,14 +2,16 @@
 #define BOARD_H
 
 #include <string>
+#include "graphicdisplay.h"
 
 class Board {
-//  GraphicDisplay *graphics;
+  GraphicDisplay *graphics;
   char brd[8][8];
   public:
     Board();
     void defSetup();
     bool setPiece(char type, std::string location);
+    bool rightTeam(char player, std::string place);
     bool checkPawnsSetup();
     bool checkKingsSetup();
     bool legalMove(std::string start, std::string end);
