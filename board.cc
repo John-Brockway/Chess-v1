@@ -17,6 +17,7 @@ Board::Board() {
       }
     }
   }
+  graphics = new GraphicDisplay();
 }
 
 void Board::defSetup() {
@@ -128,6 +129,7 @@ bool Board::move(string start, string end) {
     else {
       brd[8 - start[1] + '0'][start[0] - 'a'] = '_';
     }
+    graphics->notify(start[0] - 'a', 7 - (start[1] - '1'), end[0] - 'a', 7 - (end[1] - 'a'), brd[8 - end[1] + '0'][end[0] - 'a']);
     return true;
   }
   return false;
