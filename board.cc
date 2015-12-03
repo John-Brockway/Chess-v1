@@ -44,7 +44,57 @@ void Board::defSetup() {
   }
 }
 
+bool Board::setPiece(char type, string location) {
+  int row = 8 - location[1] + '0';
+  int col = location[0] - 'a';
+  if (row < 0 || row > 7 || col < 0 || col > 7) return false;
+  if (type == 0) {
+    int rowMod = row % 2;
+    int colMod = col % 2;
+    if (rowMod == 0 && colMod == 0) {
+      brd[row][col] = ' ';
+    }
+    else if (rowMod == 1 && colMod == 1) {
+      brd[row][col] = ' ';
+    }
+    else {
+      brd[row][col] = '_';
+    }
+    return true;
+  }
+  else if (type == 'r' || type == 'n' || type == 'b' || type == 'q' || type == 'k' || type == 'p' ||
+            type == 'R' || type == 'N' || type == 'B' || type == 'Q' || type == 'K' || type == 'P') {
+    brd[row][col] = type;
+    return true;
+  }
+  return false;
+}
+
+bool Board::checkPawnsSetup() {
+  for (int i = 0 ; i < 8 ; i++) {
+    if (brd[0][i] == 'P') return false;
+  }
+  for (int i = 0 ; i < 8 ; i++) {
+    if (brd[7][i] == 'p') return false;
+  }
+  return true;
+}
+
+bool Board::checkKingsSetup() {
+  int whiteK = 0;
+  int blackK = 0;
+  for (int i = 0 ; i < 8 ; i++) {
+    for (int j = 0 ; j < 8 ; j++) {
+      if (brd[i][j] == 'k') blackK++;
+      else if (brd[i][j] == 'K') whiteK++;
+    }
+  }
+  if (whiteK == 1 && blackK == 1) return true;
+  else return false;
+}
+
 void Board::print() {
+  cout << endl;
   for (int i = 0 ; i < 8 ; i++) {
     int row = 8 - i;
     cout << row << " ";
@@ -53,7 +103,7 @@ void Board::print() {
     }
     cout << endl;
   }
-  cout << "  abcdefgh" << endl;
+  cout << "  abcdefgh" << endl << endl;
 }
 
 bool Board::move(string start, string end) {
@@ -435,28 +485,4 @@ bool Board::legalMove(string start, string end) {
     return false;
   }
   return false;
-}
-
-
-
-
-
-
-
-
-
-int main () {
-  Board b;
-  b.defSetup();
-  b.move("a7", "a5");
-  b.move("b2", "b4");
-  b.move("b4", "a5");
-  b.move("b1", "c3");
-  b.move("c3", "h3");
-  b.move("a5", "b6");
-  b.move("c1", "a3");
-  b.move("d1", "c1");
-  b.move("c1", "b2");
-  b.move("b2", "b7");
-  b.print();
 }
