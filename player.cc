@@ -13,12 +13,12 @@ void Player::movePiece(std::string start, std::string end) {
   board->move(start, end);
 }
 
-void Player::movePiece(std::string start, std::string end, std::string prom) {
+void Player::movePiece(std::string start, std::string end, char prom) {
   board->move(start, end, prom);
 }
 
 void Player::aiMovePiece() {
-  board->aiMove(aiLevel);
+ // board->aiMove(aiLevel);
 }
 
 void Player::setCheck(bool c) {
