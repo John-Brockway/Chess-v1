@@ -129,7 +129,7 @@ bool Board::move(string start, string end) {
     else {
       brd[8 - start[1] + '0'][start[0] - 'a'] = '_';
     }
-    graphics->notify(start[0] - 'a', 7 - (start[1] - '1'), end[0] - 'a', 7 - (end[1] - 'a'), brd[8 - end[1] + '0'][end[0] - 'a']);
+    graphics->notify(start[0] - 'a', 7 - (start[1] - '1'), end[0] - 'a', 7 - (end[1] - '1'), brd[8 - end[1] + '0'][end[0] - 'a']);
     return true;
   }
   return false;
@@ -432,11 +432,11 @@ bool Board::legalMove(string start, string end) {
         if ((brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') && (brd[eRow-1][eCol] == ' ' || brd[eRow-1][eCol] == '_')) return true;
         else return false;
       }
-      if (eRow = sRow+1 && eCol == sCol-1) {
+      if (eRow == sRow+1 && eCol == sCol-1) {
         if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
         else return false;
       }
-      if (eRow = sRow+1 && eCol == sCol+1) {
+      if (eRow == sRow+1 && eCol == sCol+1) {
         if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
         else return false;
       }
@@ -451,7 +451,7 @@ bool Board::legalMove(string start, string end) {
         if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
         else return false;
       }
-      if (eCol = sCol+1) {
+      if (eCol == sCol+1) {
         if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
         else return false;
       }
@@ -468,11 +468,11 @@ bool Board::legalMove(string start, string end) {
         if ((brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') && (brd[eRow-1][eCol] == ' ' || brd[eRow-1][eCol] == '_')) return true;
         else return false;
       }
-      if (eRow = sRow-1 && eCol == sCol-1) {
+      if (eRow == sRow-1 && eCol == sCol-1) {
         if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
         else return false;
       }
-      if (eRow = sRow-1 && eCol == sCol+1) {
+      if (eRow == sRow-1 && eCol == sCol+1) {
         if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
         else return false;
       }
@@ -487,7 +487,7 @@ bool Board::legalMove(string start, string end) {
         if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
         else return false;
       }
-      if (eCol = sCol+1) {
+      if (eCol == sCol+1) {
         if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
         else return false;
       }
