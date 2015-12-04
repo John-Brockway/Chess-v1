@@ -141,6 +141,10 @@ int main(int argc, char* argv[]) {
          continue;
         }
       }
+      else {
+      	cout << "That was not a valid command."
+	continue;
+      }
       if (player == 'w') player = 'b';
       else if (player == 'b') player = 'w';
     }
