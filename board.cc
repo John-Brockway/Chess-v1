@@ -202,13 +202,12 @@ bool Board::move(char player, string start, string end, char promotion) {
   return false;
 }
 
-bool Board::undoMove(string start, string current, char deleted) {
-  int sRow = 8 - start[1] + '0';
-  int sCol = start[0] - 'a';
+void Board::undoMove(string start, string current, char deleted) {
   int cRow = 8 - current[1] + '0';
   int cCol = current[0] - 'a';
-  brd[sRow][sCol] = brd[cRow][cCol];
-  brd[cRow][cCol] = deleted;
+  setPiece(brd[cRow][cCol], start);
+  if (deleted == ' ' || deleted == '_') setPiece(0, current);
+  else setPiece(deleted, current);
 }
 
 
