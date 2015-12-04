@@ -102,6 +102,8 @@ int main(int argc, char* argv[]) {
       argc = 1;
       b.print();
     }
+    bool wCheck = false;
+    bool bCheck = false;
     while (gameOn) {                      // cycling through turns
       cout << player << "'s Move: ";
       if (player == 'w')
@@ -149,20 +151,30 @@ int main(int argc, char* argv[]) {
       	cout << "That was not a valid command." << endl;
 	continue;
       }
+      if (b.checkWhite(b.findKing('w'))) {
+        cout << "White is in check!" << endl;
+        wCheck = true;
+      } else wCheck = false;
+      if (b.checkBlack(b.findKing('b'))) {
+        cout << "Black is in check!" << endl;
+        bCheck = true;
+      } else bCheck = false;
 
-      if (b.findKing('w') == "") {
+      if (!b.anyMoves('w') && wCheck) {
         cout << "Checkmate! Black wins!" << endl;
         break;
       }
-      if (b.findKing('b') == "") {
+      if (!b.anyMoves('b') && bCheck) {
         cout << "Checkmate! White wins!" << endl;
+        break;
       }
-
-      if (b.checkWhite(b.findKing('w'))) {
-        cout << "White is in check!" << endl;
+      if (!b.anyMoves('w')) {
+        cout << "Stalemate!" << endl;
+        break;
       }
-      if (b.checkBlack(b.findKing('b'))) {
-        cout << "Black is in check!" << endl;
+      if (!b.anyMoves('b')) {
+        cout << "Stalemate!" << endl;
+        break;
       }
       if (player == 'w') player = 'b';
       else if (player == 'b') player = 'w';

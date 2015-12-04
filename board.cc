@@ -243,12 +243,34 @@ bool Board::move(char player, string start, string end) {
     		qRookWhiteMoved = true;
     	else if (start == "h1")
     		kRookWhiteMoved = true;
-    }	
+    }
     else if (deleted == 'k')
     	kingBlackMoved = true;
     else if (deleted == 'K')
-    	kingWhiteMoved = true;    
+    	kingWhiteMoved = true; 
     return true;
+  }
+  return false;
+}
+
+bool Board::testMoves(char player, int sRow, int sCol, int eRow, int eCol) {
+  char deleted = brd[eRow][eCol];
+  string start = "a1";
+  start[0] = sCol + 'a';
+  start[1] = (8-sRow) + '0';
+  string end = "a1";
+  end[0] = eCol + 'a';
+  end[1] = (8-eRow) + '0';
+  if (rightTeam(player, start) && move(player, start, end)) {
+    if (player == 'w' && !checkWhite(findKing('w'))) {
+      undoMove(start, end, deleted);
+      return true;
+    }
+    if (player == 'b' && !checkBlack(findKing('b'))) {
+      undoMove(start, end, deleted);
+      return true;
+    }
+    undoMove(start, end, deleted);
   }
   return false;
 }
@@ -659,140 +681,53 @@ bool Board::anyMoves(char player) {
     for (int j = 0 ; j < 8 ; j++) {
       if ((player == 'w' && brd[i][j] < 'Z' && brd[i][j] > 'A') || (player == 'b' && brd[i][j] < 'z' && brd[i][j] > 'a')) {
 	if (brd[i][j] == 'r' || brd[i][j] == 'R') {
-	  if (i+1 < 8 && (brd[i+1][j] == ' ' || brd[i+1][j] == '_')) return true;
-	  if (i+1 < 8 && brd[i][j] == 'r' && brd[i+1][j] < 'Z' && brd[i+1][j] > 'A') return true;
-	  if (i+1 < 8 && brd[i][j] == 'R' && brd[i+1][j] < 'z' && brd[i+1][j] > 'a') return true;
-	  if (i-1 >= 0 && (brd[i-1][j] == ' ' || brd[i+1][j] == '_')) return true;
-	  if (i-1 >= 0 && brd[i][j] == 'r' && brd[i-1][j] < 'Z' && brd[i-1][j] > 'A') return true;
-	  if (i-1 >= 0 && brd[i][j] == 'R' && brd[i-1][j] < 'z' && brd[i-1][j] > 'a') return true;
-	  if (j-1 >= 0 && (brd[i][j-1] == ' ' || brd[i][j-1] == '_')) return true;
-	  if (j-1 >= 0 && brd[i][j] == 'r' && brd[i][j-1] < 'Z' && brd[i][j-1] > 'A') return true;
-	  if (j-1 >= 0 && brd[i][j] == 'R' && brd[i][j-1] < 'z' && brd[i][j-1] > 'a') return true;
-	  if (j+1 < 8 && (brd[i][j+1] == ' ' || brd[i][j+1] == '_')) return true;
-	  if (j+1 < 8 && brd[i][j] == 'r' && brd[i][j+1] < 'Z' && brd[i][j+1] > 'A') return true;
-	  if (j+1 < 8 && brd[i][j] == 'R' && brd[i][j+1] < 'z' && brd[i][j+1] > 'a') return true;
+	  if (testMoves(player, i, j, i+1, j)) return true;
+	  if (testMoves(player, i, j, i-1, j)) return true;
+          if (testMoves(player, i, j, i, j-1)) return true;
+          if (testMoves(player, i, j, i, j+1)) return true;
 	}
-	if (brd[i][j] == 'n') {
-	  if (i+2 < 8 && j+1 < 8 &&
-               (brd[i+2][j+1] == ' ' || brd[i+2][j+1] == '_' || (brd[i+2][j+1] < 'Z' && brd[i+2][j+1] > 'A'))) return true;
-	  if (i+2 < 8 && j-1 >= 0 &&
-               (brd[i+2][j-1] == ' ' || brd[i+2][j-1] == '_' || (brd[i+2][j-1] < 'Z' && brd[i+2][j-1] > 'A'))) return true;
-	  if (i-2 >= 0 && j+1 < 8 &&
-               (brd[i-2][j+1] == ' ' || brd[i-2][j+1] == '_' || (brd[i-2][j+1] < 'Z' && brd[i-2][j+1] > 'A'))) return true;
-	  if (i-2 >= 0 && j-1 >= 0 &&
-               (brd[i-2][j-1] == ' ' || brd[i-2][j-1] == '_' || (brd[i-2][j-1] < 'Z' && brd[i-2][j-1] > 'A'))) return true;
-	  if (i+1 < 8 && j+2 < 8 &&
-               (brd[i+1][j+2] == ' ' || brd[i+1][j+2] == '_' || (brd[i+1][j+2] < 'Z' && brd[i+1][j+2] > 'A'))) return true;
-	  if (i+1 < 8 && j-2 >=0 &&
-               (brd[i+1][j-2] == ' ' || brd[i+1][j-2] == '_' || (brd[i+1][j-2] < 'Z' && brd[i+1][j-2] > 'A'))) return true;
-	  if (i-1 >= 0 && j+2 < 8 &&
-               (brd[i-1][j+2] == ' ' || brd[i-1][j+2] == '_' || (brd[i-1][j+2] < 'Z' && brd[i-1][j+2] > 'A'))) return true;
-	  if (i-1 >= 0 && j-1 >= 0 &&
-               (brd[i-1][j-2] == ' ' || brd[i-1][j-2] == '_' || (brd[i-1][j-2] < 'Z' && brd[i-1][j-2] > 'A'))) return true;
-	}
-	if (brd[i][j] == 'N') {
-	  if (i+2 < 8 && j+1 < 8 &&
-               (brd[i+2][j+1] == ' ' || brd[i+2][j+1] == '_' || (brd[i+2][j+1] < 'z' && brd[i+2][j+1] > 'a'))) return true;
-	  if (i+2 < 8 && j-1 >= 0 &&
-               (brd[i+2][j-1] == ' ' || brd[i+2][j-1] == '_' || (brd[i+2][j-1] < 'z' && brd[i+2][j-1] > 'a'))) return true;
-	  if (i-2 >= 0 && j+1 < 8 &&
-               (brd[i-2][j+1] == ' ' || brd[i-2][j+1] == '_' || (brd[i-2][j+1] < 'z' && brd[i-2][j+1] > 'a'))) return true;
-	  if (i-2 >= 0 && j-1 >= 0 &&
-               (brd[i-2][j-1] == ' ' || brd[i-2][j-1] == '_' || (brd[i-2][j-1] < 'z' && brd[i-2][j-1] > 'a'))) return true;
-	  if (i+1 < 8 && j+2 < 8 &&
-               (brd[i+1][j+2] == ' ' || brd[i+1][j+2] == '_' || (brd[i+1][j+2] < 'z' && brd[i+1][j+2] > 'a'))) return true;
-	  if (i+1 < 8 && j-2 >=0 &&
-               (brd[i+1][j-2] == ' ' || brd[i+1][j-2] == '_' || (brd[i+1][j-2] < 'z' && brd[i+1][j-2] > 'a'))) return true;
-	  if (i-1 >= 0 && j+2 < 8 &&
-               (brd[i-1][j+2] == ' ' || brd[i-1][j+2] == '_' || (brd[i-1][j+2] < 'z' && brd[i-1][j+2] > 'a'))) return true;
-	  if (i-1 >= 0 && j-1 >= 0 &&
-               (brd[i-1][j-2] == ' ' || brd[i-1][j-2] == '_' || (brd[i-1][j-2] < 'z' && brd[i-1][j-2] > 'a'))) return true;
+	if (brd[i][j] == 'n' || brd[i][j] == 'N') {
+	  if (testMoves(player, i, j, i+2, j+1)) return true;
+	  if (testMoves(player, i, j, i+2, j-1)) return true;
+	  if (testMoves(player, i, j, i-2, j+1)) return true;
+	  if (testMoves(player, i, j, i-2, j-2)) return true;
+	  if (testMoves(player, i, j, i+1, j+2)) return true;
+	  if (testMoves(player, i, j, i+1, j-2)) return true;
+	  if (testMoves(player, i, j, i-1, j+2)) return true;
+	  if (testMoves(player, i, j, i-1, j-2)) return true;
 	}
 	if (brd[i][j] == 'b' || brd[i][j] == 'B') {
-	  if (i+1 < 8 && j+1 < 8 && (brd[i+1][j+1] == ' ' || brd[i+1][j+1] == '_')) return true;
-	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'b' && brd[i+1][j+1] < 'Z' && brd[i+1][j+1] > 'A') return true;
-	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'B' && brd[i+1][j+1] < 'z' && brd[i+1][j+1] > 'a') return true;
-	  if (i-1 >= 0 && j+1 < 8 && (brd[i-1][j+1] == ' ' || brd[i+1][j+1] == '_')) return true;
-	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'b' && brd[i-1][j+1] < 'Z' && brd[i-1][j+1] > 'A') return true;
-	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'B' && brd[i-1][j+1] < 'z' && brd[i-1][j+1] > 'a') return true;
-	  if (i+1 < 8 && j-1 >= 0 && (brd[i+1][j-1] == ' ' || brd[i+1][j-1] == '_')) return true;
-	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'b' && brd[i+1][j-1] < 'Z' && brd[i+1][j-1] > 'A') return true;
-	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'B' && brd[i+1][j-1] < 'z' && brd[i+1][j-1] > 'a') return true;
-	  if (i-1 >= 0 && j-1 >= 0 && (brd[i-1][j-1] == ' ' || brd[i-1][j-1] == '_')) return true;
-	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'b' && brd[i-1][j-1] < 'Z' && brd[i-1][j-1] > 'A') return true;
-	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'B' && brd[i-1][j-1] < 'z' && brd[i-1][j-1] > 'a') return true;
+	  if (testMoves(player, i, j, i+1, j+1)) return true;
+          if (testMoves(player, i, j, i-1, j+1)) return true;
+          if (testMoves(player, i, j, i+1, j-1)) return true;
+	  if (testMoves(player, i, j, i-1, j-1)) return true;
 	}
 	if (brd[i][j] == 'q' || brd[i][j] == 'Q') {
-	  if (i+1 < 8 && (brd[i+1][j] == ' ' || brd[i+1][j] == '_')) return true;
-	  if (i+1 < 8 && brd[i][j] == 'q' && brd[i+1][j] < 'Z' && brd[i+1][j] > 'A') return true;
-	  if (i+1 < 8 && brd[i][j] == 'Q' && brd[i+1][j] < 'z' && brd[i+1][j] > 'a') return true;
-	  if (i-1 >= 0 && (brd[i-1][j] == ' ' || brd[i+1][j] == '_')) return true;
-	  if (i-1 >= 0 && brd[i][j] == 'q' && brd[i-1][j] < 'Z' && brd[i-1][j] > 'A') return true;
-	  if (i-1 >= 0 && brd[i][j] == 'Q' && brd[i-1][j] < 'z' && brd[i-1][j] > 'a') return true;
-	  if (j-1 >= 0 && (brd[i][j-1] == ' ' || brd[i][j-1] == '_')) return true;
-	  if (j-1 >= 0 && brd[i][j] == 'q' && brd[i][j-1] < 'Z' && brd[i][j-1] > 'A') return true;
-	  if (j-1 >= 0 && brd[i][j] == 'Q' && brd[i][j-1] < 'z' && brd[i][j-1] > 'a') return true;
-	  if (j+1 < 8 && (brd[i][j+1] == ' ' || brd[i][j+1] == '_')) return true;
-	  if (j+1 < 8 && brd[i][j] == 'q' && brd[i][j+1] < 'Z' && brd[i][j+1] > 'A') return true;
-	  if (j+1 < 8 && brd[i][j] == 'Q' && brd[i][j+1] < 'z' && brd[i][j+1] > 'a') return true;
-	  if (i+1 < 8 && j+1 < 8 && (brd[i+1][j+1] == ' ' || brd[i+1][j+1] == '_')) return true;
-	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'q' && brd[i+1][j+1] < 'Z' && brd[i+1][j+1] > 'A') return true;
-	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'Q' && brd[i+1][j+1] < 'z' && brd[i+1][j+1] > 'a') return true;
-	  if (i-1 >= 0 && j+1 < 8 && (brd[i-1][j+1] == ' ' || brd[i+1][j+1] == '_')) return true;
-	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'q' && brd[i-1][j+1] < 'Z' && brd[i-1][j+1] > 'A') return true;
-	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'Q' && brd[i-1][j+1] < 'z' && brd[i-1][j+1] > 'a') return true;
-	  if (i+1 < 8 && j-1 >= 0 && (brd[i+1][j-1] == ' ' || brd[i+1][j-1] == '_')) return true;
-	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'q' && brd[i+1][j-1] < 'Z' && brd[i+1][j-1] > 'A') return true;
-	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'Q' && brd[i+1][j-1] < 'z' && brd[i+1][j-1] > 'a') return true;
-	  if (i-1 >= 0 && j-1 >= 0 && (brd[i-1][j-1] == ' ' || brd[i-1][j-1] == '_')) return true;
-	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'q' && brd[i-1][j-1] < 'Z' && brd[i-1][j-1] > 'A') return true;
-	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'Q' && brd[i-1][j-1] < 'z' && brd[i-1][j-1] > 'a') return true;
+          if (testMoves(player, i, j, i+1, j)) return true;
+          if (testMoves(player, i, j, i-1, j)) return true;
+          if (testMoves(player, i, j, i, j-1)) return true;
+          if (testMoves(player, i, j, i, j+1)) return true;
+          if (testMoves(player, i, j, i+1, j+1)) return true;
+          if (testMoves(player, i, j, i-1, j+1)) return true;
+          if (testMoves(player, i, j, i+1, j-1)) return true;
+          if (testMoves(player, i, j, i-1, j-1)) return true;
+
 	}
 	if (brd[i][j] == 'k' || brd[i][j] == 'K') {
-	  string location = "a1";
-	  location[0] = j-1+'a';
-	  location[1] = (8-i)+'0';
-	  if (j-1 >= 0 && brd[i][j] == 'k' && !checkBlack(location)) return true;
-	  if (j-1 >= 0 && brd[i][j] == 'K' && !checkWhite(location)) return true;
-	  location[0] = j+1+'a';
-	  location[1] = (8-i)+'0';
-	  if (j+1 < 8 && brd[i][j] == 'k' && !checkBlack(location)) return true;
-	  if (j+1 < 8 && brd[i][j] == 'K' && !checkWhite(location)) return true;
-	  location[0] = j+'a';
-	  location[1] = (8-i+1)+'0';
-	  if (i+1 < 8 && brd[i][j] == 'k' && !checkBlack(location)) return true;
-	  if (i+1 < 8 && brd[i][j] == 'K' && !checkWhite(location)) return true;
-	  location[0] = j+'a';
-	  location[1] = (8-i-1)+'0';
-	  if (i-1 >= 0 && brd[i][j] == 'k' && !checkBlack(location)) return true;
-	  if (i-1 >= 0 && brd[i][j] == 'K' && !checkWhite(location)) return true;
-	  location[0] = j+1+'a';
-	  location[1] = (8-i+1)+'0';
-	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'k' && !checkBlack(location)) return true;
-	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'K' && !checkWhite(location)) return true;
-	  location[0] = j+'a'-1;
-	  location[1] = (8-i+1)+'0';
-	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'k' && !checkBlack(location)) return true;
-	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'K' && !checkWhite(location)) return true;
-	  location[0] = j+1+'a';
-	  location[1] = (8-i-1)+'0';
-	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'k' && !checkBlack(location)) return true;
-	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'K' && !checkWhite(location)) return true;
-	  location[0] = j+'a'-1;
-	  location[1] = (8-i-1)+'0';
-	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'k' && !checkBlack(location)) return true;
-	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'K' && !checkWhite(location)) return true;
+          if (testMoves(player, i, j, i, j-1)) return true;
+          if (testMoves(player, i, j, i, j+1)) return true;
+          if (testMoves(player, i, j, i-1, j)) return true;
+          if (testMoves(player, i, j, i+1, j)) return true;
+          if (testMoves(player, i, j, i+1, j+1)) return true;
+          if (testMoves(player, i, j, i+1, j-1)) return true;
+          if (testMoves(player, i, j, i-1, j+1)) return true;
+          if (testMoves(player, i, j, i-1, j-1)) return true;
 	}
-	if (brd[i][j] == 'p') {
-          if (i+1 < 8 && (brd[i+1][j] == ' ' || brd[i+1][j] == '_')) return true;
-	  if (i+1 < 8 && j-1 >= 0 && brd[i+1][j-1] < 'Z' && brd[i+1][j-1] > 'A') return true;
-	  if (i+1 < 8 && j+1 < 8 && brd[i+1][j+1] < 'Z' && brd[i+1][j+1] > 'A') return true;
+	if (brd[i][j] == 'p' || brd[i][j] == 'P') {
+          if (testMoves(player, i, j, i+1, j)) return true;
+	  if (testMoves(player, i, j, i+1, j-1)) return true;
+	  if (testMoves(player, i, j, i+1, j+1)) return true;
 	}
-        if (brd[i][j] == 'p') {
-          if (i+1 < 8 && (brd[i+1][j] == ' ' || brd[i+1][j] == '_')) return true;
-          if (i+1 < 8 && j-1 >= 0 && brd[i+1][j-1] < 'z' && brd[i+1][j-1] > 'a') return true;
-          if (i+1 < 8 && j+1 < 8 && brd[i+1][j+1] < 'z' && brd[i+1][j+1] > 'a') return true;
-        }
       }
     }
   }

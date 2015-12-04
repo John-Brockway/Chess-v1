@@ -15,6 +15,7 @@ class Board {
   bool kRookBlackMoved;
   bool qRookBlackMoved;
   bool kingBlackMoved;
+  bool testMoves(char player, int sRow, int sCol, int eRow, int eCol);
   public:
     Board();
     ~Board();
