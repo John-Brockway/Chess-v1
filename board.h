@@ -7,6 +7,8 @@
 class Board {
   GraphicDisplay *graphics;
   char brd[8][8];
+  bool wEnPassant[8];
+  bool bEnPassant[8];
   public:
     Board();
     ~Board();
