@@ -104,6 +104,10 @@ int main(int argc, char* argv[]) {
     }
     while (gameOn) {                      // cycling through turns
       cout << player << "'s Move: ";
+      if (player == 'w')
+    	  b.clearEPFlags(3);
+      else
+    	  b.clearEPFlags(2);
       input = "";
       getline(cin, input);
       if (input == "resign") {
@@ -165,4 +169,3 @@ int main(int argc, char* argv[]) {
     }
   }
 }
-
