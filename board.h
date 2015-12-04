@@ -14,6 +14,8 @@ class Board {
     bool rightTeam(char player, std::string place);
     bool checkPawnsSetup();
     bool checkKingsSetup();
+    bool checkBlack(std::string location);
+    bool checkWhite(std::string location);
     bool legalMove(std::string start, std::string end);
     void print();
     bool move(std::string start, std::string end);

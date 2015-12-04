@@ -498,3 +498,143 @@ bool Board::legalMove(string start, string end) {
   }
   return false;
 }
+
+bool Board::checkBlack (string location) {
+  int row = 8 - location[1] + '0';
+  int col = location [0] - 'a';
+
+  for (int cCol = col-1 ; cCol >= 0 ; cCol--) {                                // check horizontals and verticals
+    if (brd[row][cCol] == 'R' || brd[row][cCol] == 'Q') return true;
+    if (brd[row][cCol] < 'z' && brd[row][cCol] > 'a') break;
+    if (brd[row][cCol] < 'Z' && brd[row][cCol] > 'A') break;
+  }
+  for (int cCol = col+1 ; cCol < 8 ; cCol++) {
+    if (brd[row][cCol] == 'R' || brd[row][cCol] == 'Q') return true;
+    if (brd[row][cCol] < 'z' && brd[row][cCol] > 'a') break;
+    if (brd[row][cCol] < 'Z' && brd[row][cCol] > 'A') break;
+  }
+  for (int cRow = row-1 ; cCol >= 0 ; cCol--) {
+    if (brd[cRow][col] == 'R' || brd[cRow][col] == 'Q') return true;
+    if (brd[cRow][col] < 'z' && brd[cRow][col] > 'a') break;
+    if (brd[cRow][col] < 'Z' && brd[cRow][col] > 'A') break;
+  }
+  for (int cRow = row+1 ; cCol < 8 ; cCol++) {
+    if (brd[cRow][col] == 'R' || brd[cRow][col] == 'Q') return true;
+    if (brd[cRow][col] < 'z' && brd[cRow][col] > 'a') break;
+    if (brd[cRow][col] < 'Z' && brd[cRow][col] > 'A') break;
+  }
+
+  for (int cRow = row+1, cCol = col+1 ; cRow < 8 && cCol < 8 ; cRow++, cCol++) {    // check diagonals
+    if (brd[cRow][cCol] == 'B' || brd[cRow][cCol] == 'Q') return true;
+    if (brd[cRow][cCol] < 'z' && brd[cRow][cCol] > 'a') break;
+    if (brd[cRow][cCol] < 'Z' && brd[cRow][cCol] > 'A') break;
+  }
+  for (int cRow = row+1, cCol = col-1 ; cRow < 8 && cCol >= 0 ; cRow++, cCol--) {
+    if (brd[cRow][cCol] == 'B' || brd[cRow][cCol] == 'Q') return true;
+    if (brd[cRow][cCol] < 'z' && brd[cRow][cCol] > 'a') break;
+    if (brd[cRow][cCol] < 'Z' && brd[cRow][cCol] > 'A') break;
+  }
+  for (int cRow = row-1, cCol = col+1 ; cRow >= 0 && cCol < 8 ; cRow--, cCol++) {
+    if (brd[cRow][cCol] == 'B' || brd[cRow][cCol] == 'Q') return true;
+    if (brd[cRow][cCol] < 'z' && brd[cRow][cCol] > 'a') break;
+    if (brd[cRow][cCol] < 'Z' && brd[cRow][cCol] > 'A') break;
+  }
+  for (int cRow = row-1, cCol = col-1 ; cRow >= 0 && cCol >= 0 ; cRow--, cCol--) {
+    if (brd[cRow][cCol] == 'B' || brd[cRow][cCol] == 'Q') return true;
+    if (brd[cRow][cCol] < 'z' && brd[cRow][cCol] > 'a') break;
+    if (brd[cRow][cCol] < 'Z' && brd[cRow][cCol] > 'A') break;
+  }
+
+  if (row+2 < 8 && col+1 < 8 && brd[row+2][col+1] == 'N') return true;             // check knights
+  if (row+2 < 8 && col-1 >= 0 && brd[row+2][col-1] == 'N') return true;
+  if (row-2 >= 0 && col+1 < 8 && brd[row-2][col+1] == 'N') return true;
+  if (row-2 >= 0 && col-1 >=0 && brd[row-2][col-1] == 'N') return true;
+  if (row+1 < 8 && col+2 < 8 && brd[row+1][col+2] == 'N') return true;
+  if (row+1 < 8 && col-2 >= 0 && brd[row+1][col-2] == 'N') return true;
+  if (row-1 >= 0 && col+2 < 8 && brd[row-1][col+2] == 'N') return true;
+  if (row-1 >= 0 && col-2 >=0 && brd[row-1][col-2] == 'N') return true;
+
+  if (row+1 < 8 && col-1 < 8 && brd[row+1][col+1] == 'P') return true;             // check pawns
+  if (row+1 < 8 && col-1 >= 0 && brd[row+1][col-1] == 'P') return true;
+
+  if (col+1 < 8 && brd[row][col+1] == 'K') return true;                            // check king
+  if (col-1 >= 0 && brd[row][col-1] == 'K') return true;
+  if (row+1 < 8 && brd[row+1][col] == 'K') return true;
+  if (row-1 >= 0 && brd[row-1][col] == 'K') return true;
+  if (row+1 < 8 && col+1 < 8 && brd[row+1][col+1] == 'K') return true;
+  if (row+1 < 8 && col-1 >= 0 && brd[row+1][col-1] == 'K') return true;
+  if (row-1 >= 0 && col+1 < 8 && brd[row-1][col+1] == 'K') return true;
+  if (row-1 >= 0 && col-1 >= 0 && brd[row-1][col-1] == 'K') return true;
+
+  return false;
+}
+
+bool Board::checkWhite (string location) {
+  int row = 8 - location[1] + '0';
+  int col = location[0] - 'a';
+
+  for (int cCol = col-1 ; cCol >= 0 ; cCol--) {                                // check horizontals and verticals
+    if (brd[row][cCol] == 'r' || brd[row][cCol] == 'q') return true;
+    if (brd[row][cCol] < 'z' && brd[row][cCol] > 'a') break;
+    if (brd[row][cCol] < 'Z' && brd[row][cCol] > 'A') break;
+  }
+  for (int cCol = col+1 ; cCol < 8 ; cCol++) {
+    if (brd[row][cCol] == 'r' || brd[row][cCol] == 'q') return true;
+    if (brd[row][cCol] < 'z' && brd[row][cCol] > 'a') break;
+    if (brd[row][cCol] < 'Z' && brd[row][cCol] > 'A') break;
+  }
+  for (int cRow = row-1 ; cCol >= 0 ; cCol--) {
+    if (brd[cRow][col] == 'r' || brd[cRow][col] == 'q') return true;
+    if (brd[cRow][col] < 'z' && brd[cRow][col] > 'a') break;
+    if (brd[cRow][col] < 'Z' && brd[cRow][col] > 'A') break;
+  }
+  for (int cRow = row+1 ; cCol < 8 ; cCol++) {
+    if (brd[cRow][col] == 'r' || brd[cRow][col] == 'q') return true;
+    if (brd[cRow][col] < 'z' && brd[cRow][col] > 'a') break;
+    if (brd[cRow][col] < 'Z' && brd[cRow][col] > 'A') break;
+  }
+
+  for (int cRow = row+1, cCol = col+1 ; cRow < 8 && cCol < 8 ; cRow++, cCol++) {    // check diagonals
+    if (brd[cRow][cCol] == 'b' || brd[cRow][cCol] == 'q') return true;
+    if (brd[cRow][cCol] < 'z' && brd[cRow][cCol] > 'a') break;
+    if (brd[cRow][cCol] < 'Z' && brd[cRow][cCol] > 'A') break;
+  }
+  for (int cRow = row+1, cCol = col-1 ; cRow < 8 && cCol >= 0 ; cRow++, cCol--) {
+    if (brd[cRow][cCol] == 'b' || brd[cRow][cCol] == 'q') return true;
+    if (brd[cRow][cCol] < 'z' && brd[cRow][cCol] > 'a') break;
+    if (brd[cRow][cCol] < 'Z' && brd[cRow][cCol] > 'A') break;
+  }
+  for (int cRow = row-1, cCol = col+1 ; cRow >= 0 && cCol < 8 ; cRow--, cCol++) {
+    if (brd[cRow][cCol] == 'b' || brd[cRow][cCol] == 'q') return true;
+    if (brd[cRow][cCol] < 'z' && brd[cRow][cCol] > 'a') break;
+    if (brd[cRow][cCol] < 'Z' && brd[cRow][cCol] > 'A') break;
+  }
+  for (int cRow = row-1, cCol = col-1 ; cRow >= 0 && cCol >= 0 ; cRow--, cCol--) {
+    if (brd[cRow][cCol] == 'b' || brd[cRow][cCol] == 'q') return true;
+    if (brd[cRow][cCol] < 'z' && brd[cRow][cCol] > 'a') break;
+    if (brd[cRow][cCol] < 'Z' && brd[cRow][cCol] > 'A') break;
+  }
+
+  if (row+2 < 8 && col+1 < 8 && brd[row+2][col+1] == 'n') return true;             // check knights
+  if (row+2 < 8 && col-1 >= 0 && brd[row+2][col-1] == 'n') return true;
+  if (row-2 >= 0 && col+1 < 8 && brd[row-2][col+1] == 'n') return true;
+  if (row-2 >= 0 && col-1 >=0 && brd[row-2][col-1] == 'n') return true;
+  if (row+1 < 8 && col+2 < 8 && brd[row+1][col+2] == 'n') return true;
+  if (row+1 < 8 && col-2 >= 0 && brd[row+1][col-2] == 'n') return true;
+  if (row-1 >= 0 && col+2 < 8 && brd[row-1][col+2] == 'n') return true;
+  if (row-1 >= 0 && col-2 >=0 && brd[row-1][col-2] == 'n') return true;
+
+  if (row+1 < 8 && col-1 < 8 && brd[row+1][col+1] == 'p') return true;             // check pawns
+  if (row+1 < 8 && col-1 >= 0 && brd[row+1][col-1] == 'p') return true;
+
+  if (col+1 < 8 && brd[row][col+1] == 'k') return true;                            // check king
+  if (col-1 >= 0 && brd[row][col-1] == 'k') return true;
+  if (row+1 < 8 && brd[row+1][col] == 'k') return true;
+  if (row-1 >= 0 && brd[row-1][col] == 'k') return true;
+  if (row+1 < 8 && col+1 < 8 && brd[row+1][col+1] == 'k') return true;
+  if (row+1 < 8 && col-1 >= 0 && brd[row+1][col-1] == 'k') return true;
+  if (row-1 >= 0 && col+1 < 8 && brd[row-1][col+1] == 'k') return true;
+  if (row-1 >= 0 && col-1 >= 0 && brd[row-1][col-1] == 'k') return true;
+
+  return false;
+}
