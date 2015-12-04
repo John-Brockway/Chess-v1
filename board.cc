@@ -736,7 +736,7 @@ bool Board::anyMoves(char player) {
   return false;
 }
 
-void Board::aiMove(char player) {
+string Board::aiMove(char player) {
   vector<string> moves;
   string location = "a1 a1";
   for (int i = 0 ; i < 8 ; i++) {
@@ -970,42 +970,42 @@ void Board::aiMove(char player) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
 	    location[3] = j+'a';
-	    location[4] = (8-i-1)+'0';
+	    location[4] = (8-(i-1))+'0';
 	    moves.push_back(location);
 	  }
 	  if (testMoves(player, i, j, i+1, j)) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
 	    location[3] = j+'a';
-	    location[4] = (8-i+1)+'0';
+	    location[4] = (8-(i+1))+'0';
 	    moves.push_back(location);
 	  }
 	  if (testMoves(player, i, j, i+1, j+1)) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
 	    location[3] = j+1+'a';
-	    location[4] = (8-i+1)+'0';
+	    location[4] = (8-(i+1))+'0';
 	    moves.push_back(location);
 	  }
 	  if (testMoves(player, i, j, i+1, j-1)) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
 	    location[3] = j-1+'a';
-	    location[4] = (8-i+1)+'0';
+	    location[4] = (8-(i+1))+'0';
 	    moves.push_back(location);
 	  }
 	  if (testMoves(player, i, j, i-1, j+1)) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
 	    location[3] = j+1+'a';
-	    location[4] = (8-i-1)+'0';
+	    location[4] = (8-(i-1))+'0';
 	    moves.push_back(location);
 	  }
 	  if (testMoves(player, i, j, i-1, j-1)) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
 	    location[3] = j-1+'a';
-	    location[4] = (8-i-1)+'0';
+	    location[4] = (8-(i-1))+'0';
 	    moves.push_back(location);
 	  }
 	}
@@ -1014,21 +1014,21 @@ void Board::aiMove(char player) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
 	    location[3] = j+'a';
-	    location[4] = (8-i+1)+'0';
+	    location[4] = (8-(i+1))+'0';
 	    moves.push_back(location);
 	  }
 	  if (testMoves(player, i, j, i+1, j-1)) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
 	    location[3] = j+1-'a';
-	    location[4] = (8-i+1)+'0';
+	    location[4] = (8-(i+1))+'0';
 	    moves.push_back(location);
 	  }
 	  if (testMoves(player, i, j, i+1, j+1)) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
 	    location[3] = j+1+'a';
-	    location[4] = (8-i+1)+'0';
+	    location[4] = (8-(i+1))+'0';
 	    moves.push_back(location);
 	  }
 	}
@@ -1037,21 +1037,21 @@ void Board::aiMove(char player) {
             location[0] = j+'a';
             location[1] = (8-i)+'0';
             location[3] = j+'a';
-            location[4] = (8-i-1)+'0';
+            location[4] = (8-(i-1))+'0';
             moves.push_back(location);
           }
           if (testMoves(player, i, j, i-1, j-1)) {
             location[0] = j+'a';
             location[1] = (8-i)+'0';
             location[3] = j+1-'a';
-            location[4] = (8-i-1)+'0';
+            location[4] = (8-(i-1))+'0';
             moves.push_back(location);
           }
           if (testMoves(player, i, j, i-1, j+1)) {
             location[0] = j+'a';
             location[1] = (8-i)+'0';
             location[3] = j+1+'a';
-            location[4] = (8-i-1)+'0';
+            location[4] = (8-(i-1))+'0';
             moves.push_back(location);
           }
         }
@@ -1063,6 +1063,7 @@ void Board::aiMove(char player) {
   string start = (moves.at(chosenMove)).substr(0, 2);
   string end = (moves.at(chosenMove)).substr(3, 2);
   move(player, start, end);
+  return moves.at(chosenMove);
 }
 
 string Board::findKing(char player) {

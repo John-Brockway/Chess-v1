@@ -34,7 +34,7 @@ class Board {
     bool move(char player, std::string start, std::string end);
     bool move(char player, std::string start, std::string end, char promotion);
     void undoMove(std::string start, std::string current, char deleted);
-    void aiMove(char player);
+    std::string aiMove(char player);
     void clearEPFlags(int n); // 2 for black, 3 for white, 6 for both
 };
 

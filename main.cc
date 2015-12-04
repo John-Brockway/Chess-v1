@@ -37,6 +37,7 @@ int main(int argc, char* argv[]) {
 	}
 	else if (input == "setup") {
 	  player = 'w';
+          b.defSetup();
 	  b.print();
 	  while (1) {
 	    char addType;
@@ -158,7 +159,10 @@ int main(int argc, char* argv[]) {
 	  continue;
 	}
       }
-      else b.aiMove(player);
+      else {
+        cout << b.aiMove(player) << endl;
+        b.print();
+      }
       if (b.checkWhite(b.findKing('w'))) {
 	cout << "White is in check!" << endl;
 	wCheck = true;
