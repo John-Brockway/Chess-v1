@@ -513,12 +513,12 @@ bool Board::checkBlack (string location) {
     if (brd[row][cCol] < 'z' && brd[row][cCol] > 'a') break;
     if (brd[row][cCol] < 'Z' && brd[row][cCol] > 'A') break;
   }
-  for (int cRow = row-1 ; cCol >= 0 ; cCol--) {
+  for (int cRow = row-1 ; cRow >= 0 ; cRow--) {
     if (brd[cRow][col] == 'R' || brd[cRow][col] == 'Q') return true;
     if (brd[cRow][col] < 'z' && brd[cRow][col] > 'a') break;
     if (brd[cRow][col] < 'Z' && brd[cRow][col] > 'A') break;
   }
-  for (int cRow = row+1 ; cCol < 8 ; cCol++) {
+  for (int cRow = row+1 ; cRow < 8 ; cRow++) {
     if (brd[cRow][col] == 'R' || brd[cRow][col] == 'Q') return true;
     if (brd[cRow][col] < 'z' && brd[cRow][col] > 'a') break;
     if (brd[cRow][col] < 'Z' && brd[cRow][col] > 'A') break;
@@ -583,12 +583,12 @@ bool Board::checkWhite (string location) {
     if (brd[row][cCol] < 'z' && brd[row][cCol] > 'a') break;
     if (brd[row][cCol] < 'Z' && brd[row][cCol] > 'A') break;
   }
-  for (int cRow = row-1 ; cCol >= 0 ; cCol--) {
+  for (int cRow = row-1 ; cRow >= 0 ; cRow--) {
     if (brd[cRow][col] == 'r' || brd[cRow][col] == 'q') return true;
     if (brd[cRow][col] < 'z' && brd[cRow][col] > 'a') break;
     if (brd[cRow][col] < 'Z' && brd[cRow][col] > 'A') break;
   }
-  for (int cRow = row+1 ; cCol < 8 ; cCol++) {
+  for (int cRow = row+1 ; cRow < 8 ; cRow++) {
     if (brd[cRow][col] == 'r' || brd[cRow][col] == 'q') return true;
     if (brd[cRow][col] < 'z' && brd[cRow][col] > 'a') break;
     if (brd[cRow][col] < 'Z' && brd[cRow][col] > 'A') break;
