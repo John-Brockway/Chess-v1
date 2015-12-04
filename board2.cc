@@ -8,17 +8,16 @@ Board::Board() {
   for (int i = 0 ; i < 8 ; i++) {
     for (int j = 0 ; j < 8 ; j++) {
       if (k == 0) {
-        brd[i][j] = ' ';
-        if (j != 7) k++;
+	brd[i][j] = ' ';
+	if (j != 7) k++;
       }
       else {
-        brd[i][j] = '_';
-        if (j != 7) k--;
+	brd[i][j] = '_';
+	if (j != 7) k--;
       }
     }
   }
   graphics = new GraphicDisplay();
-  clearEPFlags(6);
 }
 
 void Board::clear() {
@@ -26,27 +25,16 @@ void Board::clear() {
   for (int i = 0 ; i < 8 ; i++) {
     for (int j = 0 ; j < 8 ; j++) {
       if (k == 0) {
-        brd[i][j] = ' ';
-        if (j != 7) k++;
+	brd[i][j] = ' ';
+	if (j != 7) k++;
       }
       else {
-        brd[i][j] = '_';
-        if (j != 7) k--;
+	brd[i][j] = '_';
+	if (j != 7) k--;
       }
     }
   }
   graphics->clear();
-}
-
-void Board::clearEPFlags(int n)
-{
-	for (int i = 0; i < 8; i++)
-	{
-		if (n % 2 == 0)
-			bEnPassant[i] = false;
-		if (n % 3 == 0)
-			wEnPassant[i] = false;
-	}
 }
 
 Board::~Board() {
@@ -99,7 +87,7 @@ bool Board::setPiece(char type, string location) {
     return true;
   }
   else if (type == 'r' || type == 'n' || type == 'b' || type == 'q' || type == 'k' || type == 'p' ||
-            type == 'R' || type == 'N' || type == 'B' || type == 'Q' || type == 'K' || type == 'P') {
+      type == 'R' || type == 'N' || type == 'B' || type == 'Q' || type == 'K' || type == 'P') {
     brd[row][col] = type;
     return true;
   }
@@ -150,15 +138,8 @@ bool Board::rightTeam(char player, string place) {
   return false;
 }
 
-bool Board::move(char player, string start, string end) {
-  char deleted = brd[8 - end[1] + '0'][end[0] - 'a'];
+bool Board::move(string start, string end) {
   if (legalMove(start, end)) {
-    if ((brd[8 - start[1] + '0'][start[0] - 'a'] == 'P' || brd[8 - start[1] + '0'][start[0] - 'a'] == 'p') && (start[0] - 'a' != end[0] - 'a') && (brd[8 - end[1] + '0'][end[0] - 'a'] == ' ' || brd[8 - end[1] + '0'][end[0] - 'a'] == '_'))
-	{
-		string takenPiece = end;
-		takenPiece[1] = start[1];
-		setPiece(0, takenPiece);
-	}
     brd[8 - end[1] + '0'][end[0] - 'a'] = brd[8 - start[1] + '0'][start[0] - 'a'];
     int rowMod = start[1] % 2;
     int colMod = (start[0] - 'a') % 2;
@@ -172,28 +153,13 @@ bool Board::move(char player, string start, string end) {
       brd[8 - start[1] + '0'][start[0] - 'a'] = '_';
     }
     graphics->notify(start[0] - 'a', 7 - (start[1] - '1'), end[0] - 'a', 7 - (end[1] - '1'), brd[8 - end[1] + '0'][end[0] - 'a']);
-    if ((brd[8 - end[1] + '0'][end[0] - 'a'] == 'p' || brd[8 - end[1] + '0'][end[0] - 'a'] == 'P') && ((end[1] - start[1]) == 2 || (end[1] - start[1]) == -2))
-    {
-    	if (end[1] == '5')
-    		bEnPassant[end[0] - 'a'] = true;
-    	else
-    		wEnPassant[end[0] - 'a'] = true;
-    }
-    if (player == 'w' && checkWhite(findKing(player))) {
-      undoMove(start, end, deleted);
-      return false;
-    }
-    if (player == 'b' && checkBlack(findKing(player))) {
-      undoMove(start, end, deleted);
-      return false;
-    }
     return true;
   }
   return false;
 }
 
-bool Board::move(char player, string start, string end, char promotion) {
-  if (move(player, start, end)) {
+bool Board::move(string start, string end, char promotion) {
+  if (move(start, end)) {
     if ((brd[8 - end[1] + '0'][end[0] - 'a'] == 'P' && end[1] == '8') || (brd[8 - end[1] + '0'][end[0] - 'a'] == 'p' && end[1] == '1')) {
       brd[8 - end[1] + '0'][end[0] - 'a'] = promotion;
       return true;
@@ -201,16 +167,6 @@ bool Board::move(char player, string start, string end, char promotion) {
   }
   return false;
 }
-
-bool Board::undoMove(string start, string current, char deleted) {
-  int sRow = 8 - start[1] + '0';
-  int sCol = start[0] - 'a';
-  int cRow = 8 - current[1] + '0';
-  int cCol = current[0] - 'a';
-  brd[sRow][sCol] = brd[cRow][cCol];
-  brd[cRow][cCol] = deleted;
-}
-
 
 bool Board::legalMove(string start, string end) {
   int sRow = 8 - start[1] + '0';
@@ -224,65 +180,65 @@ bool Board::legalMove(string start, string end) {
     if (sRow != eRow && sCol != eCol) return false;
     if (sCol == eCol && eRow > sRow) {
       for (int cRow = sRow+1 ; cRow < 8 ; cRow++) {
-        if (cRow == eRow) {
-          if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-          if (pieceType == 'r') {
-            if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-          }
-          else if (pieceType == 'R') {
-            if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-          }
-          return false;
-        }
-        else if (brd[cRow][eCol] != ' ' && brd[cRow][eCol] != '_') return false;
+	if (cRow == eRow) {
+	  if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	  if (pieceType == 'r') {
+	    if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	  }
+	  else if (pieceType == 'R') {
+	    if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	  }
+	  return false;
+	}
+	else if (brd[cRow][eCol] != ' ' && brd[cRow][eCol] != '_') return false;
       }
       return false;
     }
     else if (sCol == eCol && eRow < sRow) {
       for (int cRow = sRow-1 ; cRow >= 0 ; cRow--) {
-        if (cRow == eRow) {
-          if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-          if (pieceType == 'r') {
-            if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-          }
-          else if (pieceType == 'R') {
-            if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-          }
-          return false;
-        }
-        else if (brd[cRow][eCol] != ' ' && brd[cRow][eCol] != '_') return false;
+	if (cRow == eRow) {
+	  if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	  if (pieceType == 'r') {
+	    if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	  }
+	  else if (pieceType == 'R') {
+	    if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	  }
+	  return false;
+	}
+	else if (brd[cRow][eCol] != ' ' && brd[cRow][eCol] != '_') return false;
       }
       return false;
     }
     else if (sRow == eRow && eCol > sCol) {
       for (int cCol = sCol+1 ; cCol < 7 ; cCol++ ) {
-        if (cCol == eCol) {
-          if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-          if (pieceType == 'r') {
-            if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-          }
-          else if (pieceType == 'R') {
-            if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-          }
-          return false;
-        }
-        else if (brd[eRow][cCol] != ' ' && brd[eRow][cCol] != '_') return false;
+	if (cCol == eCol) {
+	  if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	  if (pieceType == 'r') {
+	    if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	  }
+	  else if (pieceType == 'R') {
+	    if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	  }
+	  return false;
+	}
+	else if (brd[eRow][cCol] != ' ' && brd[eRow][cCol] != '_') return false;
       }
       return false;
     }
     else if (sRow == eRow && eCol < sCol) {
       for (int cCol = sCol-1 ; cCol >= 0 ; cCol--) {
-        if (cCol == eCol) {
-          if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-          if (pieceType == 'r') {
-            if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-          }
-          else if (pieceType == 'R') {
-            if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-          }
-          return false;
-        }
-        else if (brd[eRow][cCol] != ' ' && brd[eRow][cCol] != '_') return false;
+	if (cCol == eCol) {
+	  if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	  if (pieceType == 'r') {
+	    if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	  }
+	  else if (pieceType == 'R') {
+	    if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	  }
+	  return false;
+	}
+	else if (brd[eRow][cCol] != ' ' && brd[eRow][cCol] != '_') return false;
       }
       return false;
     }
@@ -304,53 +260,53 @@ bool Board::legalMove(string start, string end) {
     if (sRow == eRow || sCol == eCol) return false;
     for (int cRow = sRow+1, cCol = sCol+1 ; cRow < 8 && cCol < 8 ; cRow++, cCol++) {
       if (cRow == eRow && cCol == eCol) {
-        if (pieceType == 'b') {
-          if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
-          else return false;
-        }
-        else if (pieceType == 'B') {
-          if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
-          else return false;
-        }
+	if (pieceType == 'b') {
+	  if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
+	  else return false;
+	}
+	else if (pieceType == 'B') {
+	  if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
+	  else return false;
+	}
       }
       else if (brd[cRow][cCol] != ' ' && brd[cRow][cCol] != '_') break;;
     }
     for (int cRow = sRow+1, cCol = sCol-1 ; cRow < 8 && cCol >= 0 ; cRow++, cCol--) {
       if (cRow == eRow && cCol == eCol) {
-        if (pieceType == 'b') {
-          if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
-          else return false;
-        }
-        else if (pieceType == 'B') {
-          if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
-          else return false;
-        }
+	if (pieceType == 'b') {
+	  if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
+	  else return false;
+	}
+	else if (pieceType == 'B') {
+	  if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
+	  else return false;
+	}
       }
       else if (brd[cRow][cCol] != ' ' && brd[cRow][cCol] != '_') break;
     }
     for (int cRow = sRow-1, cCol = sCol+1 ; cRow >= 0 && cCol < 8 ; cRow--, cCol++) {
       if (cRow == eRow && cCol == eCol) {
-        if (pieceType == 'b') {
-          if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
-          else return false;
-        }
-        else if (pieceType == 'B') {
-          if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
-          else return false;
-        }
+	if (pieceType == 'b') {
+	  if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
+	  else return false;
+	}
+	else if (pieceType == 'B') {
+	  if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
+	  else return false;
+	}
       }
       else if (brd[cRow][cCol] != ' ' && brd[cRow][cCol] != '_') break;
     }
     for (int cRow = sRow-1, cCol = sCol-1 ; cRow >= 0 && cCol >= 0 ; cRow--, cCol--) {
       if (cRow == eRow && cCol == eCol) {
-        if (pieceType == 'b') {
-          if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
-          else return false;
-        }
-        else if (pieceType == 'B') {
-          if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
-          else return false;
-        }
+	if (pieceType == 'b') {
+	  if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
+	  else return false;
+	}
+	else if (pieceType == 'B') {
+	  if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
+	  else return false;
+	}
       }
       else if (brd[cRow][cCol] != ' ' && brd[cRow][cCol] != '_') break;
     }
@@ -359,117 +315,117 @@ bool Board::legalMove(string start, string end) {
   else if (pieceType == 'q' || pieceType == 'Q') {
     if (sCol == eCol && eRow > sRow) {
       for (int cRow = sRow+1 ; cRow < 8 ; cRow++) {
-        if (cRow == eRow) {
-          if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-          if (pieceType == 'q') {
-            if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-          }
-          else if (pieceType == 'Q') {
-            if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-          }
-          return false;
-        }
-        else if (brd[cRow][eCol] != ' ' && brd[cRow][eCol] != '_') return false;
+	if (cRow == eRow) {
+	  if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	  if (pieceType == 'q') {
+	    if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	  }
+	  else if (pieceType == 'Q') {
+	    if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	  }
+	  return false;
+	}
+	else if (brd[cRow][eCol] != ' ' && brd[cRow][eCol] != '_') return false;
       }
       return false;
     }
     else if (sCol == eCol && eRow < sRow) {
       for (int cRow = sRow-1 ; cRow >= 0 ; cRow--) {
-        if (cRow == eRow) {
-          if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-          if (pieceType == 'q') {
-            if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-          }
-          else if (pieceType == 'Q') {
-            if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-          }
-          return false;
-        }
-        else if (brd[cRow][eCol] != ' ' && brd[cRow][eCol] != '_') return false;
+	if (cRow == eRow) {
+	  if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	  if (pieceType == 'q') {
+	    if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	  }
+	  else if (pieceType == 'Q') {
+	    if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	  }
+	  return false;
+	}
+	else if (brd[cRow][eCol] != ' ' && brd[cRow][eCol] != '_') return false;
       }
       return false;
     }
     else if (sRow == eRow && eCol > sCol) {
       for (int cCol = sCol+1 ; cCol < 7 ; cCol++ ) {
-        if (cCol == eCol) {
-          if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-          if (pieceType == 'q') {
-            if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-          }
-          else if (pieceType == 'Q') {
-            if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-          }
-          return false;
-        }
-        else if (brd[eRow][cCol] != ' ' && brd[eRow][cCol] != '_') return false;
+	if (cCol == eCol) {
+	  if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	  if (pieceType == 'q') {
+	    if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	  }
+	  else if (pieceType == 'Q') {
+	    if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	  }
+	  return false;
+	}
+	else if (brd[eRow][cCol] != ' ' && brd[eRow][cCol] != '_') return false;
       }
       return false;
     }
     else if (sRow == eRow && eCol < sCol) {
       for (int cCol = sCol-1 ; cCol >= 0 ; cCol--) {
-        if (cCol == eCol) {
-          if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-          if (pieceType == 'q') {
-            if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-          }
-          else if (pieceType == 'Q') {
-            if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-          }
-          return false;
-        }
-        else if (brd[eRow][cCol] != ' ' && brd[eRow][cCol] != '_') return false;
+	if (cCol == eCol) {
+	  if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	  if (pieceType == 'q') {
+	    if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	  }
+	  else if (pieceType == 'Q') {
+	    if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	  }
+	  return false;
+	}
+	else if (brd[eRow][cCol] != ' ' && brd[eRow][cCol] != '_') return false;
       }
       return false;
     }
     for (int cRow = sRow+1, cCol = sCol+1 ; cRow < 8 && cCol < 8 ; cRow++, cCol++) {
       if (cRow == eRow && cCol == eCol) {
-        if (pieceType == 'q') {
-          if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
-          else return false;
-        }
-        else if (pieceType == 'Q') {
-          if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
-          else return false;
-        }
+	if (pieceType == 'q') {
+	  if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
+	  else return false;
+	}
+	else if (pieceType == 'Q') {
+	  if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
+	  else return false;
+	}
       }
       else if (brd[cRow][cCol] != ' ' && brd[cRow][cCol] != '_') break;;
     }
     for (int cRow = sRow+1, cCol = sCol-1 ; cRow < 8 && cCol >= 0 ; cRow++, cCol--) {
       if (cRow == eRow && cCol == eCol) {
-        if (pieceType == 'q') {
-          if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
-          else return false;
-        }
-        else if (pieceType == 'Q') {
-          if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
-          else return false;
-        }
+	if (pieceType == 'q') {
+	  if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
+	  else return false;
+	}
+	else if (pieceType == 'Q') {
+	  if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
+	  else return false;
+	}
       }
       else if (brd[cRow][cCol] != ' ' && brd[cRow][cCol] != '_') break;
     }
     for (int cRow = sRow-1, cCol = sCol+1 ; cRow >= 0 && cCol < 8 ; cRow--, cCol++) {
       if (cRow == eRow && cCol == eCol) {
-        if (pieceType == 'q') {
-          if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
-          else return false;
-        }
-        else if (pieceType == 'Q') {
-          if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
-          else return false;
-        }
+	if (pieceType == 'q') {
+	  if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
+	  else return false;
+	}
+	else if (pieceType == 'Q') {
+	  if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
+	  else return false;
+	}
       }
       else if (brd[cRow][cCol] != ' ' && brd[cRow][cCol] != '_') break;
     }
     for (int cRow = sRow-1, cCol = sCol-1 ; cRow >= 0 && cCol >= 0 ; cRow--, cCol--) {
       if (cRow == eRow && cCol == eCol) {
-        if (pieceType == 'q') {
-          if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
-          else return false;
-        }
-        else if (pieceType == 'Q') {
-          if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
-          else return false;
-        }
+	if (pieceType == 'q') {
+	  if (!(brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a')) return true;
+	  else return false;
+	}
+	else if (pieceType == 'Q') {
+	  if (!(brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A')) return true;
+	  else return false;
+	}
       }
       else if (brd[cRow][cCol] != ' ' && brd[cRow][cCol] != '_') break;
     }
@@ -495,45 +451,41 @@ bool Board::legalMove(string start, string end) {
     if (eRow == sRow-1 && eCol == sCol-1 && pieceType == 'k' && !checkBlack(end)) return true;
     if (eRow == sRow-1 && eCol == sCol-1 && pieceType == 'K' && !checkWhite(end)) return true;
 
-                 //implement castling
+    //implement castling
     return false;
   }
   else if (pieceType == 'p') {
     if (sRow == 1) {
       if (eRow == sRow+1 && eCol == sCol) {
-        if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-        else return false;
+	if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	else return false;
       }
       if (eRow == sRow+2 && eCol == sCol) {
-        if ((brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') && (brd[eRow-1][eCol] == ' ' || brd[eRow-1][eCol] == '_')) return true;
-        else return false;
+	if ((brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') && (brd[eRow-1][eCol] == ' ' || brd[eRow-1][eCol] == '_')) return true;
+	else return false;
       }
       if (eRow == sRow+1 && eCol == sCol-1) {
-        if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-        else return false;
+	if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	else return false;
       }
       if (eRow == sRow+1 && eCol == sCol+1) {
-        if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-        else return false;
+	if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	else return false;
       }
     }
     else {
       if (eRow != sRow+1) return false;
-      if (sRow == 4 && wEnPassant[eCol])
-      {
-    	  return (brd[sRow][eCol] == 'P');
-      }
       if (eCol == sCol) {
-        if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-        else return false;
+	if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	else return false;
       }
       if (eCol == sCol-1) {
-        if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-        else return false;
+	if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	else return false;
       }
       if (eCol == sCol+1) {
-        if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
-        else return false;
+	if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
+	else return false;
       }
     }
     return false;
@@ -541,41 +493,37 @@ bool Board::legalMove(string start, string end) {
   else if (pieceType == 'P') {
     if (sRow == 6) {
       if (eRow == sRow-1 && eCol == sCol) {
-        if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-        else return false;
+	if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	else return false;
       }
       if (eRow == sRow-2 && eCol == sCol) {
-        if ((brd[sRow-1][eCol] == ' ' || brd[sRow-1][eCol] == '_') && (brd[sRow-2][eCol] == ' ' || brd[sRow-2][eCol] == '_')) return true;
-        else return false;
+	if ((brd[sRow-1][eCol] == ' ' || brd[sRow-1][eCol] == '_') && (brd[sRow-2][eCol] == ' ' || brd[sRow-2][eCol] == '_')) return true;
+	else return false;
       }
       if (eRow == sRow-1 && eCol == sCol-1) {
-        if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-        else return false;
+	if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	else return false;
       }
       if (eRow == sRow-1 && eCol == sCol+1) {
-        if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-        else return false;
+	if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	else return false;
       }
     }
     else {
       if (eRow != sRow-1) return false;
-      if (sRow == 3 && bEnPassant[eCol])
-      {
-    	  return (brd[sRow][eCol] == 'p');
-      }
       if (eCol == sCol) {
-        if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
-        else return false;
+	if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
+	else return false;
       }
       if (eCol == sCol-1) {
-        if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-        else return false;
+	if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	else return false;
       }
       if (eCol == sCol+1) {
-        if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
-        else return false;
+	if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
+	else return false;
       }
-    }
+    } //En passent is tricky, not done yet
     return false;
   }
   return false;
@@ -726,19 +674,22 @@ bool Board::anyMoves(char player) {
   return false;
 }
 
+
+////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 string Board::findKing(char player) {
   string location = "a1";
   for (int i = 0 ; i < 8 ; i++) {
     for (int j = 0 ; j < 8 ; j++) {
       if (player == 'w' && brd[i][j] == 'K') {
-        location[0] = j + 'a';
-        location[1] = (8 - i) + '0';
-        return location;
+	location[0] = j + 'a';
+	location[1] = (8 - i) + '0';
+	return location;
       }
       else if (player == 'b' && brd[i][j] == 'k') {
-        location[0] = j + 'a';
-        location[1] = (8 - i) + '0';
-        return location;
+	location[0] = j + 'a';
+	location[1] = (8 - i) + '0';
+	return location;
       }
     }
   }

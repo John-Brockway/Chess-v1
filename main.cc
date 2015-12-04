@@ -132,8 +132,8 @@ int main(int argc, char* argv[]) {
         ss >> end;
         bool rightTeam = b.rightTeam(player, start);
         if (rightTeam) {
-          if (ss >> promotion) validTurn = b.move(start, end, promotion);
-          else validTurn = b.move(start, end);
+          if (ss >> promotion) validTurn = b.move(player, start, end, promotion);
+          else validTurn = b.move(player, start, end);
           if (validTurn) b.print();
           else {
             cout << "That was not a valid move!" << endl;

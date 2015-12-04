@@ -2,19 +2,20 @@
 #include "board.h"
 #include <string>
 
-Player::Player(int i, Board *b) {
+Player::Player(int i, Board *b, char c) {
   if (i != 0) {
     aiLevel = i;
   }
   board = b;
+  colour = c;
 }
 
 void Player::movePiece(std::string start, std::string end) {
-  board->move(start, end);
+  board->move(colour, start, end);
 }
 
 void Player::movePiece(std::string start, std::string end, char prom) {
-  board->move(start, end, prom);
+  board->move(colour, start, end, prom);
 }
 
 void Player::aiMovePiece() {
