@@ -467,7 +467,7 @@ bool Board::legalMove(string start, string end) {
         else return false;
       }
       if (eRow == sRow-2 && eCol == sCol) {
-        if ((brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') && (brd[eRow-1][eCol] == ' ' || brd[eRow-1][eCol] == '_')) return true;
+        if ((brd[sRow-1][eCol] == ' ' || brd[sRow-1][eCol] == '_') && (brd[sRow-2][eCol] == ' ' || brd[sRow-2][eCol] == '_')) return true;
         else return false;
       }
       if (eRow == sRow-1 && eCol == sCol-1) {

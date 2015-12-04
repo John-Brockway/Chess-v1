@@ -146,6 +146,14 @@ int main(int argc, char* argv[]) {
 	continue;
       }
 
+      if (b.findKing('w') == "") {
+        cout << "Checkmate! Black wins!" << endl;
+        break;
+      }
+      if (b.findKing('b') == "") {
+        cout << "Checkmate! White wins!" << endl;
+      }
+
       if (b.checkWhite(b.findKing('w'))) {
         cout << "White is in check!" << endl;
       }
@@ -157,3 +165,4 @@ int main(int argc, char* argv[]) {
     }
   }
 }
+
