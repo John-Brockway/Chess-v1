@@ -19,6 +19,12 @@ Board::Board() {
   }
   graphics = new GraphicDisplay();
   clearEPFlags(6);
+  kRookWhiteMoved = false;
+  qRookWhiteMoved = false;
+  kingWhiteMoved = false;
+  kRookBlackMoved = false;
+  qRookBlackMoved = false;
+  kingBlackMoved = false;
 }
 
 void Board::clear() {
@@ -160,6 +166,32 @@ bool Board::move(char player, string start, string end) {
 		takenPiece[1] = start[1];
 		setPiece(0, takenPiece);
 	}
+    if (brd[8 - start[1] + '0'][start[0] - 'a'] == 'K')
+    {
+    	if ((end[1] - start[1]) == 2) //king side
+    	{
+    		setPiece(0,"h1");
+    		setPiece('R',"f1");
+    	}
+    	else if ((end[1] - start[1]) == -2) //queen side
+    	{
+    		setPiece(0,"a1");
+    		setPiece('R',"d1");
+    	}
+    }
+    if (brd[8 - start[1] + '0'][start[0] - 'a'] == 'k')
+    {
+    	if ((end[1] - start[1]) == 2) //king side
+    	{
+    		setPiece(0,"h8");
+    		setPiece('R',"f8");
+    	}
+    	else if ((end[1] - start[1]) == -2) //queen side
+    	{
+    		setPiece(0,"a8");
+    		setPiece('R',"d8");
+    	}
+    }
     brd[8 - end[1] + '0'][end[0] - 'a'] = brd[8 - start[1] + '0'][start[0] - 'a'];
     int rowMod = start[1] % 2;
     int colMod = (start[0] - 'a') % 2;
@@ -198,6 +230,24 @@ bool Board::move(char player, string start, string end) {
       undoMove(start, end, deleted);
       return false;
     }
+    if (deleted == 'r')
+    {
+    	if (start == "a8")
+    		qRookBlackMoved = true;
+    	else if (start == "h8")
+    		kRookBlackMoved = true;
+    }
+    else if (deleted == 'R')
+    {
+    	if (start == "a1")
+    		qRookWhiteMoved = true;
+    	else if (start == "h1")
+    		kRookWhiteMoved = true;
+    }	
+    else if (deleted == 'k')
+    	kingBlackMoved = true;
+    else if (deleted == 'K')
+    	kingWhiteMoved = true;    
     return true;
   }
   return false;
@@ -505,7 +555,20 @@ bool Board::legalMove(string start, string end) {
     if (eRow == sRow-1 && eCol == sCol-1 && pieceType == 'k' && !checkBlack(end)) return true;
     if (eRow == sRow-1 && eCol == sCol-1 && pieceType == 'K' && !checkWhite(end)) return true;
 
-                 //implement castling
+    if ((sRow == eRow) && (eCol == sCol - 2)) //queen side
+    {
+    	if (pieceType =='K')  //white
+    		return (!qRookWhiteMoved && !kingWhiteMoved && !checkWhite("c1") && !checkWhite("d1") && !checkWhite("e1") && (brd[7][1] < 'z' && brd[7][1] > 'a') && (brd[7][2] < 'z' && brd[7][2] > 'a') && (brd[7][3] < 'z' && brd[7][3] > 'a'));
+    	if (pieceType =='k') //black
+    		return (!qRookBlackMoved && !kingBlackMoved && !checkBlack("c8") && !checkBlack("d8") && !checkBlack("e8") && (brd[0][1] < 'z' && brd[0][1] > 'a') && (brd[0][2] < 'z' && brd[0][2] > 'a') && (brd[0][3] < 'z' && brd[0][3] > 'a'));
+    }
+    if ((sRow == eRow) && (eCol == sCol + 2)) //king side
+    {
+    	if (pieceType =='K')  //white
+    		return (!kRookWhiteMoved && !kingWhiteMoved && !checkWhite("e1") && !checkWhite("f1") && !checkWhite("g1") && (brd[7][5] < 'z' && brd[7][5] > 'a') && (brd[7][6] < 'z' && brd[7][6] > 'a'));
+    	if (pieceType =='k') //black
+    		return (!kRookBlackMoved && !kingBlackMoved && !checkBlack("e8") && !checkBlack("f8") && !checkBlack("g8") && (brd[0][5] < 'z' && brd[0][5] > 'a') && (brd[0][6] < 'z' && brd[0][6] > 'a'));
+    }
     return false;
   }
   else if (pieceType == 'p') {
