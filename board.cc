@@ -168,12 +168,12 @@ bool Board::move(char player, string start, string end) {
 	}
     if (brd[8 - start[1] + '0'][start[0] - 'a'] == 'K')
     {
-    	if ((end[1] - start[1]) == 2) //king side
+    	if ((end[0] - start[0]) == 2) //king side
     	{
     		setPiece(0,"h1");
     		setPiece('R',"f1");
     	}
-    	else if ((end[1] - start[1]) == -2) //queen side
+    	else if ((end[0] - start[0]) == -2) //queen side
     	{
     		setPiece(0,"a1");
     		setPiece('R',"d1");
@@ -181,15 +181,15 @@ bool Board::move(char player, string start, string end) {
     }
     if (brd[8 - start[1] + '0'][start[0] - 'a'] == 'k')
     {
-    	if ((end[1] - start[1]) == 2) //king side
+    	if ((end[0] - start[0]) == 2) //king side
     	{
     		setPiece(0,"h8");
-    		setPiece('R',"f8");
+    		setPiece('r',"f8");
     	}
-    	else if ((end[1] - start[1]) == -2) //queen side
+    	else if ((end[0] - start[0]) == -2) //queen side
     	{
     		setPiece(0,"a8");
-    		setPiece('R',"d8");
+    		setPiece('r',"d8");
     	}
     }
     brd[8 - end[1] + '0'][end[0] - 'a'] = brd[8 - start[1] + '0'][start[0] - 'a'];
@@ -558,16 +558,16 @@ bool Board::legalMove(string start, string end) {
     if ((sRow == eRow) && (eCol == sCol - 2)) //queen side
     {
     	if (pieceType =='K')  //white
-    		return (!qRookWhiteMoved && !kingWhiteMoved && !checkWhite("c1") && !checkWhite("d1") && !checkWhite("e1") && (brd[7][1] < 'z' && brd[7][1] > 'a') && (brd[7][2] < 'z' && brd[7][2] > 'a') && (brd[7][3] < 'z' && brd[7][3] > 'a'));
+    		return (!qRookWhiteMoved && !kingWhiteMoved && !checkWhite("c1") && !checkWhite("d1") && !checkWhite("e1") && !(brd[7][1] < 'z' && brd[7][1] > 'a') && !(brd[7][2] < 'z' && brd[7][2] > 'a') && !(brd[7][3] < 'z' && brd[7][3] > 'a'));
     	if (pieceType =='k') //black
-    		return (!qRookBlackMoved && !kingBlackMoved && !checkBlack("c8") && !checkBlack("d8") && !checkBlack("e8") && (brd[0][1] < 'z' && brd[0][1] > 'a') && (brd[0][2] < 'z' && brd[0][2] > 'a') && (brd[0][3] < 'z' && brd[0][3] > 'a'));
+    		return (!qRookBlackMoved && !kingBlackMoved && !checkBlack("c8") && !checkBlack("d8") && !checkBlack("e8") && !(brd[0][1] < 'z' && brd[0][1] > 'a') && !(brd[0][2] < 'z' && brd[0][2] > 'a') && !(brd[0][3] < 'z' && brd[0][3] > 'a'));
     }
     if ((sRow == eRow) && (eCol == sCol + 2)) //king side
     {
     	if (pieceType =='K')  //white
-    		return (!kRookWhiteMoved && !kingWhiteMoved && !checkWhite("e1") && !checkWhite("f1") && !checkWhite("g1") && (brd[7][5] < 'z' && brd[7][5] > 'a') && (brd[7][6] < 'z' && brd[7][6] > 'a'));
+    		return (!kRookWhiteMoved && !kingWhiteMoved && !checkWhite("e1") && !checkWhite("f1") && !checkWhite("g1") && !(brd[7][5] < 'z' && brd[7][5] > 'a') && !(brd[7][6] < 'z' && brd[7][6] > 'a'));
     	if (pieceType =='k') //black
-    		return (!kRookBlackMoved && !kingBlackMoved && !checkBlack("e8") && !checkBlack("f8") && !checkBlack("g8") && (brd[0][5] < 'z' && brd[0][5] > 'a') && (brd[0][6] < 'z' && brd[0][6] > 'a'));
+    		return (!kRookBlackMoved && !kingBlackMoved && !checkBlack("e8") && !checkBlack("f8") && !checkBlack("g8") && !(brd[0][5] < 'z' && brd[0][5] > 'a') && !(brd[0][6] < 'z' && brd[0][6] > 'a'));
     }
     return false;
   }
