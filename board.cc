@@ -152,10 +152,11 @@ bool Board::rightTeam(char player, string place) {
 
 bool Board::move(char player, string start, string end) {
   char deleted = brd[8 - end[1] + '0'][end[0] - 'a'];
+  string takenPiece = "default"; // only for en passant
   if (legalMove(start, end)) {
     if ((brd[8 - start[1] + '0'][start[0] - 'a'] == 'P' || brd[8 - start[1] + '0'][start[0] - 'a'] == 'p') && (start[0] - 'a' != end[0] - 'a') && (brd[8 - end[1] + '0'][end[0] - 'a'] == ' ' || brd[8 - end[1] + '0'][end[0] - 'a'] == '_'))
 	{
-		string takenPiece = end;
+		takenPiece = end;
 		takenPiece[1] = start[1];
 		setPiece(0, takenPiece);
 	}
@@ -180,10 +181,20 @@ bool Board::move(char player, string start, string end) {
     		wEnPassant[end[0] - 'a'] = true;
     }
     if (player == 'w' && checkWhite(findKing(player))) {
+      if (takenPiece != "default")
+      {
+    	  deleted = 'p';
+    	  setPiece(deleted, takenPiece);
+      }
       undoMove(start, end, deleted);
       return false;
     }
     if (player == 'b' && checkBlack(findKing(player))) {
+      if (takenPiece != "default")
+      {
+    	  deleted = 'p';
+    	  setPiece(deleted, takenPiece);
+      }
       undoMove(start, end, deleted);
       return false;
     }
