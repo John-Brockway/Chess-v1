@@ -13,13 +13,13 @@ int main(int argc, char* argv[]) {
   while (gameOn) {                     // cycling through games
     char player = 'b';
     Board b;
-    bool whiteHuman = false;  // look, it sounds racist, but it's practical
-    bool blackHuman = false;
+    bool whiteHuman = true;
+    bool blackHuman = true;
     if (argc == 1) {
       while (1) {
 	b.clear();
 	cout << endl << "To start a new game, enter ''game x y'' where x and y are either " << endl;
-	cout << "''human'' or ''computer[1-4]''. To enter setup, type ''setup''" << endl;
+	cout << "''human'' or ''computer''. To enter setup, type ''setup''" << endl;
 	cout << "To stop playing for right now, type ''quit''" << endl;
 	getline(cin, input);
 	istringstream str(input);
@@ -30,9 +30,9 @@ int main(int argc, char* argv[]) {
 	  b.print();
 	  player = 'w';
 	  str >> input;
-	  if (input == "human") whiteHuman = true;
+	  if (input != "human") whiteHuman = false;
 	  str >> input;
-	  if (input == "human") blackHuman = true;
+	  if (input != "human") blackHuman = false;
 	  break;
 	}
 	else if (input == "setup") {

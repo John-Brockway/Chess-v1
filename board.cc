@@ -1009,7 +1009,7 @@ void Board::aiMove(char player) {
 	    moves.push_back(location);
 	  }
 	}
-	if (brd[i][j] == 'p' || brd[i][j] == 'P') {
+	if (brd[i][j] == 'p') {
 	  if (testMoves(player, i, j, i+1, j)) {
 	    location[0] = j+'a';
 	    location[1] = (8-i)+'0';
@@ -1032,6 +1032,29 @@ void Board::aiMove(char player) {
 	    moves.push_back(location);
 	  }
 	}
+        if (brd[i][j] == 'P') {
+          if (testMoves(player, i, j, i-1, j)) {
+            location[0] = j+'a';
+            location[1] = (8-i)+'0';
+            location[3] = j+'a';
+            location[4] = (8-i-1)+'0';
+            moves.push_back(location);
+          }
+          if (testMoves(player, i, j, i-1, j-1)) {
+            location[0] = j+'a';
+            location[1] = (8-i)+'0';
+            location[3] = j+1-'a';
+            location[4] = (8-i-1)+'0';
+            moves.push_back(location);
+          }
+          if (testMoves(player, i, j, i-1, j+1)) {
+            location[0] = j+'a';
+            location[1] = (8-i)+'0';
+            location[3] = j+1+'a';
+            location[4] = (8-i-1)+'0';
+            moves.push_back(location);
+          }
+        }
       }
     }
   }
@@ -1039,7 +1062,6 @@ void Board::aiMove(char player) {
   int chosenMove = rand() % moves.size();
   string start = (moves.at(chosenMove)).substr(0, 2);
   string end = (moves.at(chosenMove)).substr(3, 2);
-cout << start << " " << end << endl;
   move(player, start, end);
 }
 
