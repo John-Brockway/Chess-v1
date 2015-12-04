@@ -540,7 +540,7 @@ bool Board::legalMove(string start, string end) {
     }
     else {
       if (eRow != sRow-1) return false;
-      if (sRow == 3 && wEnPassant[eCol])
+      if (sRow == 3 && bEnPassant[eCol])
       {
     	  return (brd[sRow][eCol] == 'p');
       }
