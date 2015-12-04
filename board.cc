@@ -18,6 +18,7 @@ Board::Board() {
     }
   }
   graphics = new GraphicDisplay();
+  clearEPFlags(6);
 }
 
 void Board::clear() {
@@ -170,7 +171,7 @@ bool Board::move(string start, string end) {
       brd[8 - start[1] + '0'][start[0] - 'a'] = '_';
     }
     graphics->notify(start[0] - 'a', 7 - (start[1] - '1'), end[0] - 'a', 7 - (end[1] - '1'), brd[8 - end[1] + '0'][end[0] - 'a']);
-    if ((brd[8 - end[1] + '0'][end[0] - 'a'] == 'p' || brd[8 - end[1] + '0'][end[0] - 'a'] == 'P') && (end[1] - start[1]) == 2)
+    if ((brd[8 - end[1] + '0'][end[0] - 'a'] == 'p' || brd[8 - end[1] + '0'][end[0] - 'a'] == 'P') && ((end[1] - start[1]) == 2 || (end[1] - start[1]) == -2)
     {
     	if (end[1] == '5')
     		bEnPassant[end[0] - 'a'] = true;
