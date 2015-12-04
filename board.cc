@@ -50,6 +50,7 @@ bool Board::setPiece(char type, string location) {
   int row = 8 - location[1] + '0';
   int col = location[0] - 'a';
   if (row < 0 || row > 7 || col < 0 || col > 7) return false;
+  graphics->notify(col, row, col, row, type);
   if (type == 0) {
     int rowMod = row % 2;
     int colMod = col % 2;
@@ -67,7 +68,6 @@ bool Board::setPiece(char type, string location) {
   else if (type == 'r' || type == 'n' || type == 'b' || type == 'q' || type == 'k' || type == 'p' ||
             type == 'R' || type == 'N' || type == 'B' || type == 'Q' || type == 'K' || type == 'P') {
     brd[row][col] = type;
-    graphics->notify(col, row, col, row, type);
     return true;
   }
   return false;
