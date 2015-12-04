@@ -9,6 +9,12 @@ class Board {
   char brd[8][8];
   bool wEnPassant[8];
   bool bEnPassant[8];
+  bool kRookWhiteMoved;
+  bool qRookWhiteMoved;
+  bool kingWhiteMoved;
+  bool kRookBlackMoved;
+  bool qRookBlackMoved;
+  bool kingBlackMoved;
   public:
     Board();
     ~Board();
