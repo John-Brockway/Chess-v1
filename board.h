@@ -9,6 +9,8 @@ class Board {
   char brd[8][8];
   public:
     Board();
+    ~Board();
+    void clear();
     void defSetup();
     bool setPiece(char type, std::string location);
     bool rightTeam(char player, std::string place);

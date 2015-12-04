@@ -20,6 +20,27 @@ Board::Board() {
   graphics = new GraphicDisplay();
 }
 
+void Board::clear() {
+  int k = 0;
+  for (int i = 0 ; i < 8 ; i++) {
+    for (int j = 0 ; j < 8 ; j++) {
+      if (k == 0) {
+        brd[i][j] = ' ';
+        if (j != 7) k++;
+      }
+      else {
+        brd[i][j] = '_';
+        if (j != 7) k--;
+      }
+    }
+  }
+  graphics->clear();
+}
+
+Board::~Board() {
+  delete graphics;
+}
+
 void Board::defSetup() {
   brd[0][0] = 'r';
   brd[0][7] = 'r';

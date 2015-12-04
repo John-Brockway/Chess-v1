@@ -10,7 +10,7 @@ char Piece::getType() {
 
 void Piece::promote(char t) {
   if (type == 'p' || type == 'P') {
-    type == t;
+    type = t;
   }
 }
 

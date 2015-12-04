@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
     Board b;
     if (argc == 1) {
       while (1) {
+        b.clear();
         cout << endl << "To start a new game, enter ''game x y'' where x and y are either " << endl;
         cout << "''human'' or ''computer[1-4]''. To enter setup, type ''setup''" << endl;
         cout << "To stop playing for right now, type ''quit''" << endl;
@@ -81,7 +82,6 @@ int main(int argc, char* argv[]) {
           cout << "Enter valid input" << endl;
         }
       }
-      argc;
     }
     else {
       string line;
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
       }
       getline(save, line);
       player = line[0] - 'A' +'a';
-      argc = 0;
+      argc = 1;
       b.print();
     }
     while (gameOn) {                      // cycling through turns
