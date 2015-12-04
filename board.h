@@ -34,8 +34,7 @@ class Board {
     bool move(char player, std::string start, std::string end);
     bool move(char player, std::string start, std::string end, char promotion);
     void undoMove(std::string start, std::string current, char deleted);
-//    aiMove(int aiLevel); (Too tied to how legalMoves is implemented to work on yet)
-//    std::string gameEnd(); (Need to know about check scenarios to implement)
+    void aiMove(char player);
     void clearEPFlags(int n); // 2 for black, 3 for white, 6 for both
 };
 
