@@ -434,14 +434,23 @@ bool Board::legalMove(string start, string end) {
   else if (pieceType == 'k' || pieceType == 'K') {
     if (pieceType == 'k' && brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return false;
     if (pieceType == 'K' && brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return false;
-    if (eRow == sRow && eCol == sCol-1) return true;
-    if (eRow == sRow && eCol == sCol+1) return true;
-    if (eRow == sRow+1 && eCol == sCol) return true;
-    if (eRow == sRow-1 && eCol == sCol) return true;
-    if (eRow == sRow+1 && eCol == sCol+1) return true;
-    if (eRow == sRow+1 && eCol == sCol-1) return true;
-    if (eRow == sRow-1 && eCol == sCol+1) return true;
-    if (eRow == sRow-1 && eCol == sCol-1) return true;
+    if (eRow == sRow && eCol == sCol-1 && pieceType == 'k' && !checkBlack(end)) return true;
+    if (eRow == sRow && eCol == sCol-1 && pieceType == 'K' && !checkWhite(end)) return true;
+    if (eRow == sRow && eCol == sCol+1 && pieceType == 'k' && !checkBlack(end)) return true;
+    if (eRow == sRow && eCol == sCol+1 && pieceType == 'K' && !checkWhite(end)) return true;
+    if (eRow == sRow+1 && eCol == sCol && pieceType == 'k' && !checkBlack(end)) return true;
+    if (eRow == sRow+1 && eCol == sCol && pieceType == 'K' && !checkWhite(end)) return true;
+    if (eRow == sRow-1 && eCol == sCol && pieceType == 'k' && !checkBlack(end)) return true;
+    if (eRow == sRow-1 && eCol == sCol && pieceType == 'K' && !checkWhite(end)) return true;
+    if (eRow == sRow+1 && eCol == sCol+1 && pieceType == 'k' && !checkBlack(end)) return true;
+    if (eRow == sRow+1 && eCol == sCol+1 && pieceType == 'K' && !checkWhite(end)) return true;
+    if (eRow == sRow+1 && eCol == sCol-1 && pieceType == 'k' && !checkBlack(end)) return true;
+    if (eRow == sRow+1 && eCol == sCol-1 && pieceType == 'K' && !checkWhite(end)) return true;
+    if (eRow == sRow-1 && eCol == sCol+1 && pieceType == 'k' && !checkBlack(end)) return true;
+    if (eRow == sRow-1 && eCol == sCol+1 && pieceType == 'K' && !checkWhite(end)) return true;
+    if (eRow == sRow-1 && eCol == sCol-1 && pieceType == 'k' && !checkBlack(end)) return true;
+    if (eRow == sRow-1 && eCol == sCol-1 && pieceType == 'K' && !checkWhite(end)) return true;
+
                  //implement castling
     return false;
   }
