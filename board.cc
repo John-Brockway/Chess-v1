@@ -140,6 +140,12 @@ bool Board::rightTeam(char player, string place) {
 
 bool Board::move(string start, string end) {
   if (legalMove(start, end)) {
+    if ((brd[8 - start[1] + '0'][start[0] - 'a'] == 'P' || brd[8 - start[1] + '0'][start[0] - 'a'] == 'p') && (start[0] - 'a' != end[0] - 'a') && (brd[8 - end[1] + '0'][end[0] - 'a'] == ' ' || brd[8 - end[1] + '0'][end[0] - 'a'] == '_'))
+	{
+		string takenPiece = end;
+		takenPiece[1] = start[1];
+		setPiece(0, takenPiece);
+	}
     brd[8 - end[1] + '0'][end[0] - 'a'] = brd[8 - start[1] + '0'][start[0] - 'a'];
     int rowMod = start[1] % 2;
     int colMod = (start[0] - 'a') % 2;
@@ -153,6 +159,13 @@ bool Board::move(string start, string end) {
       brd[8 - start[1] + '0'][start[0] - 'a'] = '_';
     }
     graphics->notify(start[0] - 'a', 7 - (start[1] - '1'), end[0] - 'a', 7 - (end[1] - '1'), brd[8 - end[1] + '0'][end[0] - 'a']);
+    if ((brd[8 - end[1] + '0'][end[0] - 'a'] == 'p' || brd[8 - end[1] + '0'][end[0] - 'a'] == 'P') && (end[1] - start[1]) == 2)
+    {
+    	if (end[1] == '5')
+    		bEnPassant[end[0] - 'a'] = true;
+    	else
+    		wEnPassant[end[0] - 'a'] = true;
+    }    
     return true;
   }
   return false;
@@ -487,6 +500,10 @@ bool Board::legalMove(string start, string end) {
         if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
         else return false;
       }
+      if (sRow == 4 && wEnPassant[eCol])
+      {
+    	  return (brd[sRow][eCol] == 'P');
+      }      
     }
     return false;
   }
@@ -523,7 +540,11 @@ bool Board::legalMove(string start, string end) {
         if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
         else return false;
       }
-    } //En passent is tricky, not done yet
+      if (sRow == 3 && wEnPassant[eCol])
+      {
+    	  return (brd[sRow][eCol] == 'p');
+      }
+    }
     return false;
   }
   return false;
