@@ -37,6 +37,17 @@ void Board::clear() {
   graphics->clear();
 }
 
+void Board::clearEPFlags(int n)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		if (n % 2 == 0)
+			bEnPassant[i] = false;
+		if (n % 3 == 0)
+			wEnPassant[i] = false;
+	}
+}
+
 Board::~Board() {
   delete graphics;
 }
