@@ -499,6 +499,10 @@ bool Board::legalMove(string start, string end) {
     }
     else {
       if (eRow != sRow+1) return false;
+      if (sRow == 4 && wEnPassant[eCol])
+      {
+    	  return (brd[sRow][eCol] == 'P');
+      }    
       if (eCol == sCol) {
         if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
         else return false;
@@ -511,10 +515,6 @@ bool Board::legalMove(string start, string end) {
         if (brd[eRow][eCol] < 'Z' && brd[eRow][eCol] > 'A') return true;
         else return false;
       }
-      if (sRow == 4 && wEnPassant[eCol])
-      {
-    	  return (brd[sRow][eCol] == 'P');
-      }      
     }
     return false;
   }
@@ -539,6 +539,10 @@ bool Board::legalMove(string start, string end) {
     }
     else {
       if (eRow != sRow-1) return false;
+      if (sRow == 3 && wEnPassant[eCol])
+      {
+    	  return (brd[sRow][eCol] == 'p');
+      }
       if (eCol == sCol) {
         if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
         else return false;
@@ -550,10 +554,6 @@ bool Board::legalMove(string start, string end) {
       if (eCol == sCol+1) {
         if (brd[eRow][eCol] < 'z' && brd[eRow][eCol] > 'a') return true;
         else return false;
-      }
-      if (sRow == 3 && wEnPassant[eCol])
-      {
-    	  return (brd[sRow][eCol] == 'p');
       }
     }
     return false;
