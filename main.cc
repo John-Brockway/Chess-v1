@@ -145,6 +145,13 @@ int main(int argc, char* argv[]) {
       	cout << "That was not a valid command." << endl;
 	continue;
       }
+
+      if (b.checkWhite(b.findKing('w'))) {
+        cout << "White is in check!" << endl;
+      }
+      if (b.checkBlack(b.findKing('b'))) {
+        cout << "Black is in check!" << endl;
+      }
       if (player == 'w') player = 'b';
       else if (player == 'b') player = 'w';
     }

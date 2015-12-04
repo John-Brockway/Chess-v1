@@ -499,6 +499,25 @@ bool Board::legalMove(string start, string end) {
   return false;
 }
 
+string Board::findKing(char player) {
+  string location = "a1";
+  for (int i = 0 ; i < 8 ; i++) {
+    for (int j = 0 ; j < 8 ; j++) {
+      if (player == 'w' && brd[i][j] == 'K') {
+        location[0] = j + 'a';
+        location[1] = (8 - i) + '0';
+        return location;
+      }
+      else if (player == 'b' && brd[i][j] == 'k') {
+        location[0] = j + 'a';
+        location[1] = (8 - i) + '0';
+        return location;
+      }
+    }
+  }
+  return "";
+}
+
 bool Board::checkBlack (string location) {
   int row = 8 - location[1] + '0';
   int col = location [0] - 'a';
