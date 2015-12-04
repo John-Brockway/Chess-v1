@@ -150,7 +150,8 @@ bool Board::rightTeam(char player, string place) {
   return false;
 }
 
-bool Board::move(string start, string end) {
+bool Board::move(string start, string end, char player) {
+  char deleted = brd[8 - end[1] + '0'][end[0] - 'a']
   if (legalMove(start, end)) {
     if ((brd[8 - start[1] + '0'][start[0] - 'a'] == 'P' || brd[8 - start[1] + '0'][start[0] - 'a'] == 'p') && (start[0] - 'a' != end[0] - 'a') && (brd[8 - end[1] + '0'][end[0] - 'a'] == ' ' || brd[8 - end[1] + '0'][end[0] - 'a'] == '_'))
 	{
@@ -177,7 +178,15 @@ bool Board::move(string start, string end) {
     		bEnPassant[end[0] - 'a'] = true;
     	else
     		wEnPassant[end[0] - 'a'] = true;
-    }    
+    }
+    if (player == 'w' && checkWhite(findKing(player))) {
+      undoMove(start, end, deleted);
+      return false;
+    }
+    if (player == 'b' && checkBlack(findKing(player))) {
+      undoMove(start, end, deleted);
+      return false;
+    }
     return true;
   }
   return false;
@@ -192,6 +201,16 @@ bool Board::move(string start, string end, char promotion) {
   }
   return false;
 }
+
+bool Board::undoMove(string start, string current, char deleted) {
+  int sRow = 8 - start[1] + '0';
+  int sCol = start[0] - 'a';
+  int cRow = 8 - end[1] + '0';
+  int cCol = end[0] - 'a';
+  brd[sRow][sCol] = brd[cRow][cCol];
+  brd[cRow][cCol] = deleted;
+}
+
 
 bool Board::legalMove(string start, string end) {
   int sRow = 8 - start[1] + '0';
@@ -503,7 +522,7 @@ bool Board::legalMove(string start, string end) {
       if (sRow == 4 && wEnPassant[eCol])
       {
     	  return (brd[sRow][eCol] == 'P');
-      }    
+      }
       if (eCol == sCol) {
         if (brd[eRow][eCol] == ' ' || brd[eRow][eCol] == '_') return true;
         else return false;
@@ -558,6 +577,151 @@ bool Board::legalMove(string start, string end) {
       }
     }
     return false;
+  }
+  return false;
+}
+
+bool Board::anyMoves(char player) {
+  for (int i = 0 ; i < 8 ; i++) {
+    for (int j = 0 ; j < 8 ; j++) {
+      if ((player == 'w' && brd[i][j] < 'Z' && brd[i][j] > 'A') || (player == 'b' && brd[i][j] < 'z' && brd[i][j] > 'a')) {
+	if (brd[i][j] == 'r' || brd[i][j] == 'R') {
+	  if (i+1 < 8 && (brd[i+1][j] == ' ' || brd[i+1][j] == '_')) return true;
+	  if (i+1 < 8 && brd[i][j] == 'r' && brd[i+1][j] < 'Z' && brd[i+1][j] > 'A') return true;
+	  if (i+1 < 8 && brd[i][j] == 'R' && brd[i+1][j] < 'z' && brd[i+1][j] > 'a') return true;
+	  if (i-1 >= 0 && (brd[i-1][j] == ' ' || brd[i+1][j] == '_')) return true;
+	  if (i-1 >= 0 && brd[i][j] == 'r' && brd[i-1][j] < 'Z' && brd[i-1][j] > 'A') return true;
+	  if (i-1 >= 0 && brd[i][j] == 'R' && brd[i-1][j] < 'z' && brd[i-1][j] > 'a') return true;
+	  if (j-1 >= 0 && (brd[i][j-1] == ' ' || brd[i][j-1] == '_')) return true;
+	  if (j-1 >= 0 && brd[i][j] == 'r' && brd[i][j-1] < 'Z' && brd[i][j-1] > 'A') return true;
+	  if (j-1 >= 0 && brd[i][j] == 'R' && brd[i][j-1] < 'z' && brd[i][j-1] > 'a') return true;
+	  if (j+1 < 8 && (brd[i][j+1] == ' ' || brd[i][j+1] == '_')) return true;
+	  if (j+1 < 8 && brd[i][j] == 'r' && brd[i][j+1] < 'Z' && brd[i][j+1] > 'A') return true;
+	  if (j+1 < 8 && brd[i][j] == 'R' && brd[i][j+1] < 'z' && brd[i][j+1] > 'a') return true;
+	}
+	if (brd[i][j] == 'n') {
+	  if (i+2 < 8 && j+1 < 8 &&
+               (brd[i+2][j+1] == ' ' || brd[i+2][j+1] == '_' || (brd[i+2][j+1] < 'Z' && brd[i+2][j+1] > 'A'))) return true;
+	  if (i+2 < 8 && j-1 >= 0 &&
+               (brd[i+2][j-1] == ' ' || brd[i+2][j-1] == '_' || (brd[i+2][j-1] < 'Z' && brd[i+2][j-1] > 'A'))) return true;
+	  if (i-2 >= 0 && j+1 < 8 &&
+               (brd[i-2][j+1] == ' ' || brd[i-2][j+1] == '_' || (brd[i-2][j+1] < 'Z' && brd[i-2][j+1] > 'A'))) return true;
+	  if (i-2 >= 0 && j-1 >= 0 &&
+               (brd[i-2][j-1] == ' ' || brd[i-2][j-1] == '_' || (brd[i-2][j-1] < 'Z' && brd[i-2][j-1] > 'A'))) return true;
+	  if (i+1 < 8 && j+2 < 8 &&
+               (brd[i+1][j+2] == ' ' || brd[i+1][j+2] == '_' || (brd[i+1][j+2] < 'Z' && brd[i+1][j+2] > 'A'))) return true;
+	  if (i+1 < 8 && j-2 >=0 &&
+               (brd[i+1][j-2] == ' ' || brd[i+1][j-2] == '_' || (brd[i+1][j-2] < 'Z' && brd[i+1][j-2] > 'A'))) return true;
+	  if (i-1 >= 0 && j+2 < 8 &&
+               (brd[i-1][j+2] == ' ' || brd[i-1][j+2] == '_' || (brd[i-1][j+2] < 'Z' && brd[i-1][j+2] > 'A'))) return true;
+	  if (i-1 >= 0 && j-1 >= 0 &&
+               (brd[i-1][j-2] == ' ' || brd[i-1][j-2] == '_' || (brd[i-1][j-2] < 'Z' && brd[i-1][j-2] > 'A'))) return true;
+	}
+	if (brd[i][j] == 'N') {
+	  if (i+2 < 8 && j+1 < 8 &&
+               (brd[i+2][j+1] == ' ' || brd[i+2][j+1] == '_' || (brd[i+2][j+1] < 'z' && brd[i+2][j+1] > 'a'))) return true;
+	  if (i+2 < 8 && j-1 >= 0 &&
+               (brd[i+2][j-1] == ' ' || brd[i+2][j-1] == '_' || (brd[i+2][j-1] < 'z' && brd[i+2][j-1] > 'a'))) return true;
+	  if (i-2 >= 0 && j+1 < 8 &&
+               (brd[i-2][j+1] == ' ' || brd[i-2][j+1] == '_' || (brd[i-2][j+1] < 'z' && brd[i-2][j+1] > 'a'))) return true;
+	  if (i-2 >= 0 && j-1 >= 0 &&
+               (brd[i-2][j-1] == ' ' || brd[i-2][j-1] == '_' || (brd[i-2][j-1] < 'z' && brd[i-2][j-1] > 'a'))) return true;
+	  if (i+1 < 8 && j+2 < 8 &&
+               (brd[i+1][j+2] == ' ' || brd[i+1][j+2] == '_' || (brd[i+1][j+2] < 'z' && brd[i+1][j+2] > 'a'))) return true;
+	  if (i+1 < 8 && j-2 >=0 &&
+               (brd[i+1][j-2] == ' ' || brd[i+1][j-2] == '_' || (brd[i+1][j-2] < 'z' && brd[i+1][j-2] > 'a'))) return true;
+	  if (i-1 >= 0 && j+2 < 8 &&
+               (brd[i-1][j+2] == ' ' || brd[i-1][j+2] == '_' || (brd[i-1][j+2] < 'z' && brd[i-1][j+2] > 'a'))) return true;
+	  if (i-1 >= 0 && j-1 >= 0 &&
+               (brd[i-1][j-2] == ' ' || brd[i-1][j-2] == '_' || (brd[i-1][j-2] < 'z' && brd[i-1][j-2] > 'a'))) return true;
+	}
+	if (brd[i][j] == 'b' || brd[i][j] == 'B') {
+	  if (i+1 < 8 && j+1 < 8 && (brd[i+1][j+1] == ' ' || brd[i+1][j+1] == '_')) return true;
+	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'b' && brd[i+1][j+1] < 'Z' && brd[i+1][j+1] > 'A') return true;
+	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'B' && brd[i+1][j+1] < 'z' && brd[i+1][j+1] > 'a') return true;
+	  if (i-1 >= 0 && j+1 < 8 && (brd[i-1][j+1] == ' ' || brd[i+1][j+1] == '_')) return true;
+	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'b' && brd[i-1][j+1] < 'Z' && brd[i-1][j+1] > 'A') return true;
+	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'B' && brd[i-1][j+1] < 'z' && brd[i-1][j+1] > 'a') return true;
+	  if (i+1 < 8 && j-1 >= 0 && (brd[i+1][j-1] == ' ' || brd[i+1][j-1] == '_')) return true;
+	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'b' && brd[i+1][j-1] < 'Z' && brd[i+1][j-1] > 'A') return true;
+	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'B' && brd[i+1][j-1] < 'z' && brd[i+1][j-1] > 'a') return true;
+	  if (i-1 >= 0 && j-1 >= 0 && (brd[i-1][j-1] == ' ' || brd[i-1][j-1] == '_')) return true;
+	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'b' && brd[i-1][j-1] < 'Z' && brd[i-1][j-1] > 'A') return true;
+	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'B' && brd[i-1][j-1] < 'z' && brd[i-1][j-1] > 'a') return true;
+	}
+	if (brd[i][j] == 'q' || brd[i][j] == 'Q') {
+	  if (i+1 < 8 && (brd[i+1][j] == ' ' || brd[i+1][j] == '_')) return true;
+	  if (i+1 < 8 && brd[i][j] == 'q' && brd[i+1][j] < 'Z' && brd[i+1][j] > 'A') return true;
+	  if (i+1 < 8 && brd[i][j] == 'Q' && brd[i+1][j] < 'z' && brd[i+1][j] > 'a') return true;
+	  if (i-1 >= 0 && (brd[i-1][j] == ' ' || brd[i+1][j] == '_')) return true;
+	  if (i-1 >= 0 && brd[i][j] == 'q' && brd[i-1][j] < 'Z' && brd[i-1][j] > 'A') return true;
+	  if (i-1 >= 0 && brd[i][j] == 'Q' && brd[i-1][j] < 'z' && brd[i-1][j] > 'a') return true;
+	  if (j-1 >= 0 && (brd[i][j-1] == ' ' || brd[i][j-1] == '_')) return true;
+	  if (j-1 >= 0 && brd[i][j] == 'q' && brd[i][j-1] < 'Z' && brd[i][j-1] > 'A') return true;
+	  if (j-1 >= 0 && brd[i][j] == 'Q' && brd[i][j-1] < 'z' && brd[i][j-1] > 'a') return true;
+	  if (j+1 < 8 && (brd[i][j+1] == ' ' || brd[i][j+1] == '_')) return true;
+	  if (j+1 < 8 && brd[i][j] == 'q' && brd[i][j+1] < 'Z' && brd[i][j+1] > 'A') return true;
+	  if (j+1 < 8 && brd[i][j] == 'Q' && brd[i][j+1] < 'z' && brd[i][j+1] > 'a') return true;
+	  if (i+1 < 8 && j+1 < 8 && (brd[i+1][j+1] == ' ' || brd[i+1][j+1] == '_')) return true;
+	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'q' && brd[i+1][j+1] < 'Z' && brd[i+1][j+1] > 'A') return true;
+	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'Q' && brd[i+1][j+1] < 'z' && brd[i+1][j+1] > 'a') return true;
+	  if (i-1 >= 0 && j+1 < 8 && (brd[i-1][j+1] == ' ' || brd[i+1][j+1] == '_')) return true;
+	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'q' && brd[i-1][j+1] < 'Z' && brd[i-1][j+1] > 'A') return true;
+	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'Q' && brd[i-1][j+1] < 'z' && brd[i-1][j+1] > 'a') return true;
+	  if (i+1 < 8 && j-1 >= 0 && (brd[i+1][j-1] == ' ' || brd[i+1][j-1] == '_')) return true;
+	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'q' && brd[i+1][j-1] < 'Z' && brd[i+1][j-1] > 'A') return true;
+	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'Q' && brd[i+1][j-1] < 'z' && brd[i+1][j-1] > 'a') return true;
+	  if (i-1 >= 0 && j-1 >= 0 && (brd[i-1][j-1] == ' ' || brd[i-1][j-1] == '_')) return true;
+	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'q' && brd[i-1][j-1] < 'Z' && brd[i-1][j-1] > 'A') return true;
+	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'Q' && brd[i-1][j-1] < 'z' && brd[i-1][j-1] > 'a') return true;
+	}
+	if (brd[i][j] == 'k' || brd[i][j] == 'K') {
+	  string location = "a1";
+	  location[0] = j-1+'a';
+	  location[1] = (8-i)+'0';
+	  if (j-1 >= 0 && brd[i][j] == 'k' && !checkBlack(location)) return true;
+	  if (j-1 >= 0 && brd[i][j] == 'K' && !checkWhite(location)) return true;
+	  location[0] = j+1+'a';
+	  location[1] = (8-i)+'0';
+	  if (j+1 < 8 && brd[i][j] == 'k' && !checkBlack(location)) return true;
+	  if (j+1 < 8 && brd[i][j] == 'K' && !checkWhite(location)) return true;
+	  location[0] = j+'a';
+	  location[1] = (8-i+1)+'0';
+	  if (i+1 < 8 && brd[i][j] == 'k' && !checkBlack(location)) return true;
+	  if (i+1 < 8 && brd[i][j] == 'K' && !checkWhite(location)) return true;
+	  location[0] = j+'a';
+	  location[1] = (8-i-1)+'0';
+	  if (i-1 >= 0 && brd[i][j] == 'k' && !checkBlack(location)) return true;
+	  if (i-1 >= 0 && brd[i][j] == 'K' && !checkWhite(location)) return true;
+	  location[0] = j+1+'a';
+	  location[1] = (8-i+1)+'0';
+	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'k' && !checkBlack(location)) return true;
+	  if (i+1 < 8 && j+1 < 8 && brd[i][j] == 'K' && !checkWhite(location)) return true;
+	  location[0] = j+'a'-1;
+	  location[1] = (8-i+1)+'0';
+	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'k' && !checkBlack(location)) return true;
+	  if (i+1 < 8 && j-1 >= 0 && brd[i][j] == 'K' && !checkWhite(location)) return true;
+	  location[0] = j+1+'a';
+	  location[1] = (8-i-1)+'0';
+	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'k' && !checkBlack(location)) return true;
+	  if (i-1 >= 0 && j+1 < 8 && brd[i][j] == 'K' && !checkWhite(location)) return true;
+	  location[0] = j+'a'-1;
+	  location[1] = (8-i-1)+'0';
+	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'k' && !checkBlack(location)) return true;
+	  if (i-1 >= 0 && j-1 >= 0 && brd[i][j] == 'K' && !checkWhite(location)) return true;
+	}
+	if (brd[i][j] == 'p') {
+          if (i+1 < 8 && (brd[i+1][j] == ' ' || brd[i+1][j] == '_')) return true;
+	  if (i+1 < 8 && j-1 >= 0 && brd[i+1][j-1] < 'Z' && brd[i+1][j-1] > 'A') return true;
+	  if (i+1 < 8 && j+1 < 8 && brd[i+1][j+1] < 'Z' && brd[i+1][j+1] > 'A') return true;
+	}
+        if (brd[i][j] == 'p') {
+          if (i+1 < 8 && (brd[i+1][j] == ' ' || brd[i+1][j] == '_')) return true;
+          if (i+1 < 8 && j-1 >= 0 && brd[i+1][j-1] < 'z' && brd[i+1][j-1] > 'a') return true;
+          if (i+1 < 8 && j+1 < 8 && brd[i+1][j+1] < 'z' && brd[i+1][j+1] > 'a') return true;
+        }
+      }
+    }
   }
   return false;
 }
