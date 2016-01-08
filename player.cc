@@ -1,7 +1,7 @@
 #include "player.h"
 #include "board.h"
 #include <string>
-
+ 
 Player::Player(int i, Board *b, char c) {
   if (i != 0) {
     aiLevel = i;
