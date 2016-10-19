@@ -2,10 +2,8 @@
 #define BOARD_H
 
 #include <string>
-#include "graphicdisplay.h"
 
 class Board {
-  GraphicDisplay *graphics;
   char brd[8][8];
   bool wEnPassant[8];
   bool bEnPassant[8];

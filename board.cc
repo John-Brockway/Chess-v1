@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include <iostream>
+#include <time.h>
 using namespace std;
 
 Board::Board() {
@@ -19,7 +20,6 @@ Board::Board() {
       }
     }
   }
-  graphics = new GraphicDisplay();
   clearEPFlags(6);
   kRookWhiteMoved = false;
   qRookWhiteMoved = false;
@@ -43,7 +43,6 @@ void Board::clear() {
       }
     }
   }
-  graphics->clear();
 }
 
 void Board::clearEPFlags(int n)
@@ -58,7 +57,7 @@ void Board::clearEPFlags(int n)
 }
 
 Board::~Board() {
-  delete graphics;
+	
 }
 
 void Board::defSetup() {
@@ -84,14 +83,12 @@ void Board::defSetup() {
   for (int i = 0 ; i < 8 ; i++) {
     brd[6][i] = 'P';
   }
-  graphics->defaultPieces();
 }
 
 bool Board::setPiece(char type, string location) {
   int row = 8 - location[1] + '0';
   int col = location[0] - 'a';
   if (row < 0 || row > 7 || col < 0 || col > 7) return false;
-  graphics->notify(col, row, col, row, type);
   if (type == 0) {
     int rowMod = row % 2;
     int colMod = col % 2;
@@ -206,7 +203,6 @@ bool Board::move(char player, string start, string end) {
     else {
       brd[8 - start[1] + '0'][start[0] - 'a'] = '_';
     }
-    graphics->notify(start[0] - 'a', 7 - (start[1] - '1'), end[0] - 'a', 7 - (end[1] - '1'), brd[8 - end[1] + '0'][end[0] - 'a']);
     if ((brd[8 - end[1] + '0'][end[0] - 'a'] == 'p' || brd[8 - end[1] + '0'][end[0] - 'a'] == 'P') && ((end[1] - start[1]) == 2 || (end[1] - start[1]) == -2))
     {
       if (end[1] == '5')
