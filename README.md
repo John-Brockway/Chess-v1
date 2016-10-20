@@ -1,3 +1,5 @@
+Linux-compatable version of this Chess game; see other branch for Windows OS
+
 Collaborative effort between myself and Scott Broeders, Computer Science major at University of Waterloo
 
 Rudimentary game of chess, programmed in C++, complete with an interpreter loop to be able to play multiple rounds. Contains all
