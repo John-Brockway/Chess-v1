@@ -26,14 +26,18 @@ int main(int argc, char* argv[]) {
 	input = "";
 	str >> input;
 	if (input == "game") {
-	  b.defSetup();
-	  b.print();
-	  player = 'w';
-	  str >> input;
-	  if (input != "human") whiteHuman = false;
-	  str >> input;
-	  if (input != "human") blackHuman = false;
-	  break;
+		cout << endl << "--------------------------------------" << endl;
+		cout << "Instructions:" << endl << "To move, type ''move {origin} {destination}''" << endl;
+		cout << "> For example: move b2 b4 will (from starting position) move white's pawn two spaces forward" << endl;
+		cout << "To resign the game on your turn, simply type ''resign''" << endl;
+		b.defSetup();
+		b.print();
+		player = 'w';
+		str >> input;
+		if (input != "human") whiteHuman = false;
+		str >> input;
+		if (input != "human") blackHuman = false;
+		break;
 	}
 	else if (input == "setup") {
 	  player = 'w';
