@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 					cout << "> For example: + p b4 will add a white pawn at b4" << endl << "  (lower case for white, upper for black)" << endl;
 					cout << "2. To remove a piece from the board, type ''- {location}''" << endl;
 					cout << "3. To choose which player will start the game, type ''= {colour}''" << endl << "  where color is either black or white" << endl;
-					cout << "4. When ready to begin, simply type ''done''"
+					cout << "4. When ready to begin, simply type ''done''" << endl;
 					player = 'w';
 					b.defSetup();
 					b.print();
