@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 				else if (input == "setup") {
 					cout << endl << "--------------------------------------" << endl;
 					cout << "Instructions:" << endl << "1. To add a piece, type ''+ {type} {location}''" << endl;
-					cout << "> For example: + p b4 will add a white pawn at b4" << endl << "  (lower case for white, upper for black)" << endl;
+					cout << "> For example: + p b4 will add a black pawn at b4" << endl << "  (upper case letters for white, lower for black)" << endl;
 					cout << "2. To remove a piece from the board, type ''- {location}''" << endl;
 					cout << "3. To choose which player will start the game, type ''= {colour}''" << endl << "  where color is either black or white" << endl;
 					cout << "4. When ready to begin, simply type ''done''" << endl;
